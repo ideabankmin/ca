@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>계산기</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background: white;
+    color: black;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+
+    /* 가운데 ? */
+    position: relative;
+}
+
+body::before {
+    content: "?";
+
+    position: fixed;
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 300px;
+    font-weight: bold;
+
+    color: black;
+
+    opacity: 1;
+
+    z-index: 0;
+    pointer-events: none;
+}
+
+
+/* 계산기 */
+
+.calculator {
+    width: 100%;
+    max-width: 500px;
+    height: 100vh;
+
+    margin: auto;
+    padding: 15px;
+
+    display: flex;
+    flex-direction: column;
+
+    position: relative;
+    z-index: 1;
+}
+
+
+/* 숫자 표시 */
+
+.display {
+    flex: 1;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+
+    padding: 20px 10px;
+
+    overflow: hidden;
+}
+
+#result {
+    font-size: 80px;
+    font-weight: 300;
+
+    color: black;
+
+    text-shadow:
+        0 1px 3px rgba(255,255,255,0.8);
+}
+
+
+/* 버튼 */
+
+.buttons {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 12px;
+
+    padding-bottom: 15px;
+}
+
+
+button {
+    border: none;
+
+    border-radius: 50%;
+
+    aspect-ratio: 1;
+
+    font-size: 35px;
+
+    color: black;
+
+    /* 반투명 */
+    background: rgba(255,255,255,0.35);
+
+    /* 유리 느낌 */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    box-shadow:
+        inset 0 0 0 1px rgba(0,0,0,0.15),
+        0 2px 8px rgba(0,0,0,0.12);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.08s,
+        background 0.08s;
+}
+
+
+/* 눌렀을 때 */
+
+button:active {
+    transform: scale(0.94);
+
+    background: rgba(0,0,0,0.18);
+}
+
+
+/* 전부 반투명 */
+
+.gray {
+    background: rgba(255,255,255,0.35);
+
+    color: black;
+}
+
+
+.orange {
+    background: rgba(255,255,255,0.35);
+
+    color: black;
+}
+
+
+/* 0 버튼 */
+
+.zero {
+    grid-column: span 2;
+
+    border-radius: 50px;
+
+    text-align: left;
+
+    padding-left: 30px;
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="calculator">
+
+
+    <!-- 화면 -->
+
+    <div class="display">
+
+        <div id="result">0</div>
+
+    </div>
+
+
+
+    <!-- 버튼 -->
+
+    <div class="buttons">
+
+
+        <button class="gray" onclick="clearAll()">
+            AC
+        </button>
+
+
+        <button class="gray" onclick="deleteNumber()">
+            ⌫
+        </button>
+
+
+        <button class="gray" onclick="percent()">
+            %
+        </button>
+
+
+        <button class="orange" onclick="operation('÷')">
+            ÷
+        </button>
+
+
+
+        <button onclick="number(7)">
+            7
+        </button>
+
+
+        <button onclick="number(8)">
+            8
+        </button>
+
+
+        <button onclick="number(9)">
+            9
+        </button>
+
+
+        <button class="orange" onclick="operation('×')">
+            ×
+        </button>
+
+
+
+        <button onclick="number(4)">
+            4
+        </button>
+
+
+        <button onclick="number(5)">
+            5
+        </button>
+
+
+        <button onclick="number(6)">
+            6
+        </button>
+
+
+        <button class="orange" onclick="operation('−')">
+            −
+        </button>
+
+
+
+        <button onclick="number(1)">
+            1
+        </button>
+
+
+        <button onclick="number(2)">
+            2
+        </button>
+
+
+        <button onclick="number(3)">
+            3
+        </button>
+
+
+        <button class="orange" onclick="operation('+')">
+            +
+        </button>
+
+
+
+        <button class="gray" onclick="plusMinus()">
+            +/−
+        </button>
+
+
+        <button class="zero" onclick="number(0)">
+            0
+        </button>
+
+
+        <button onclick="decimal()">
+            .
+        </button>
+
+
+        <button class="orange" onclick="calculate()">
+            =
+        </button>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+let current = "0";
+
+let first = null;
+
+let operator = null;
+
+let waiting = false;
+
+
+const result =
+    document.getElementById("result");
+
+
+
+/* 화면 표시 */
+
+function show() {
+
+    result.innerText = current;
+
+}
+
+
+
+/* 숫자 */
+
+function number(n) {
+
+    if (current === "오류") {
+
+        clearAll();
+
+    }
+
+
+    if (waiting) {
+
+        current = String(n);
+
+        waiting = false;
+
+    }
+
+    else {
+
+        if (current === "0") {
+
+            current = String(n);
+
+        }
+
+        else {
+
+            current += String(n);
+
+        }
+
+    }
+
+
+    show();
+
+}
+
+
+
+/* 소수점 */
+
+function decimal() {
+
+    if (current === "오류") {
+
+        clearAll();
+
+    }
+
+
+    if (waiting) {
+
+        current = "0.";
+
+        waiting = false;
+
+    }
+
+    else if (!current.includes(".")) {
+
+        current += ".";
+
+    }
+
+
+    show();
+
+}
+
+
+
+/* 연산자 */
+
+function operation(op) {
+
+    if (current === "오류") {
+
+        return;
+
+    }
+
+
+    if (operator !== null && !waiting) {
+
+        calculate();
+
+    }
+
+
+    first = Number(current);
+
+    operator = op;
+
+    waiting = true;
+
+}
+
+
+
+/* 계산 */
+
+function calculate() {
+
+    if (
+        operator === null ||
+        first === null
+    ) {
+
+        return;
+
+    }
+
+
+    let second = Number(current);
+
+    let answer;
+
+
+    if (operator === "+") {
+
+        answer = first + second;
+
+    }
+
+
+    else if (operator === "−") {
+
+        answer = first - second;
+
+    }
+
+
+    else if (operator === "×") {
+
+        answer = first * second;
+
+    }
+
+
+    else if (operator === "÷") {
+
+        if (second === 0) {
+
+            current = "오류";
+
+            first = null;
+
+            operator = null;
+
+            show();
+
+            return;
+
+        }
+
+
+        answer = first / second;
+
+    }
+
+
+    current =
+        String(Number(answer.toPrecision(12)));
+
+
+    first = null;
+
+    operator = null;
+
+    waiting = true;
+
+
+    show();
+
+}
+
+
+
+/* AC */
+
+function clearAll() {
+
+    current = "0";
+
+    first = null;
+
+    operator = null;
+
+    waiting = false;
+
+
+    show();
+
+}
+
+
+
+/* 한 글자 삭제 */
+
+function deleteNumber() {
+
+    if (
+        waiting ||
+        current === "오류"
+    ) {
+
+        return;
+
+    }
+
+
+    if (current.length === 1) {
+
+        current = "0";
+
+    }
+
+    else {
+
+        current =
+            current.slice(0, -1);
+
+    }
+
+
+    show();
+
+}
+
+
+
+/* 퍼센트 */
+
+function percent() {
+
+    if (current === "오류") {
+
+        return;
+
+    }
+
+
+    current =
+        String(Number(current) / 100);
+
+
+    show();
+
+}
+
+
+
+/* +/− */
+
+function plusMinus() {
+
+    if (
+        current === "0" ||
+        current === "오류"
+    ) {
+
+        return;
+
+    }
+
+
+    if (current.startsWith("-")) {
+
+        current =
+            current.substring(1);
+
+    }
+
+    else {
+
+        current =
+            "-" + current;
+
+    }
+
+
+    show();
+
+}
+
+
+</script>
+
+</body>
+</html>
