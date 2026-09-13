@@ -14,6 +14,7 @@
 
 html, body {
     margin: 0;
+    padding: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -25,16 +26,15 @@ body {
     position: relative;
 }
 
-/* 가운데 ? */
-
+/* 가운데 물음표 */
 #backgroundQuestion {
     position: fixed;
     left: 50%;
-    top: 48%;
+    top: 43%;
 
     transform: translate(-50%, -50%);
 
-    font-size: min(70vw, 430px);
+    font-size: 430px;
     font-weight: bold;
     line-height: 1;
 
@@ -46,12 +46,10 @@ body {
 }
 
 /* 사진 */
-
 #photo {
     position: fixed;
-
     left: 50%;
-    top: 48%;
+    top: 43%;
 
     transform: translate(-50%, -50%);
 
@@ -70,41 +68,37 @@ body {
     display: none;
 }
 
-/* 계산기 전체 */
-
+/* 계산기 */
 .calculator {
     position: fixed;
 
     left: 50%;
-    bottom: 20px;
+    bottom: 80px;
 
     transform: translateX(-50%);
 
-    width: min(94vw, 430px);
+    width: calc(100vw - 40px);
+    max-width: 430px;
 
     z-index: 10;
 }
 
-/* 사진 설정 */
-
+/* 사진 설정 버튼 */
 .setting {
-    position: fixed;
+    position: absolute;
 
     left: 0;
-
     bottom: calc(100% + 15px);
 
-    width: 125px;
-    height: 52px;
-
-    border-radius: 30px;
+    width: 130px;
+    height: 55px;
 
     border: 1px solid #ddd;
+    border-radius: 30px;
 
     background: rgba(255,255,255,0.75);
 
     color: black;
-
     font-size: 18px;
 
     box-shadow: 0 3px 12px rgba(0,0,0,0.12);
@@ -114,73 +108,89 @@ body {
     touch-action: manipulation;
 }
 
-/* 버튼 4 x 5 */
-
+/* ★ 계산기 버튼 배열 ★ */
 .buttons {
+    width: 100%;
+
     display: grid;
 
     grid-template-columns: repeat(4, 1fr);
 
-    gap: 10px;
+    grid-template-rows: repeat(5, 1fr);
 
-    width: 100%;
+    gap: 10px;
 }
 
-/* 모든 버튼 */
-
+/* ★ 모든 버튼 완전히 동일한 크기 ★ */
 .buttons button {
     width: 100%;
+    height: auto;
+
     aspect-ratio: 1 / 1;
 
-    border-radius: 50%;
+    margin: 0;
+    padding: 0;
 
     border: 1px solid #ddd;
+    border-radius: 50%;
 
     background: rgba(255,255,255,0.65);
 
     color: black;
 
-    font-size: clamp(27px, 8vw, 40px);
+    font-size: 40px;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
-    padding: 0;
-
-    box-shadow:
-        0 4px 12px rgba(0,0,0,0.10);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.10);
 
     position: relative;
-
     z-index: 20;
 
     touch-action: manipulation;
 }
 
-/* 눌렀을 때 */
+/* ★ AC도 다른 버튼과 똑같음 ★ */
+.buttons .ac {
+    grid-column: auto;
+    grid-row: auto;
 
-.buttons button:active {
-    transform: scale(0.93);
+    width: 100%;
+    height: auto;
 
-    background: rgba(220,220,220,0.75);
+    aspect-ratio: 1 / 1;
+
+    border-radius: 50%;
+
+    font-size: 40px;
 }
 
-/* 0 버튼 */
-
+/* 0도 일반 버튼과 같은 크기 */
 .buttons .zero {
+    grid-column: auto;
+
+    width: 100%;
+    height: auto;
+
     aspect-ratio: 1 / 1;
+
+    border-radius: 50%;
 }
 
 /* 연산 버튼 */
+.buttons .operator {
+    font-size: 42px;
+}
 
-.operator {
-    font-size: clamp(30px, 8vw, 42px) !important;
+/* 눌렀을 때 */
+.buttons button:active {
+    transform: scale(0.92);
+    background: rgba(220,220,220,0.8);
 }
 
 /* 설정창 */
-
 #settings {
     position: fixed;
 
@@ -211,7 +221,6 @@ body {
 
 #settings h2 {
     margin-top: 0;
-
     text-align: center;
 }
 
@@ -219,12 +228,11 @@ body {
     display: flex;
 
     align-items: center;
-
     justify-content: space-between;
 
     gap: 8px;
 
-    margin: 15px 0;
+    margin: 14px 0;
 
     font-size: 17px;
 }
@@ -235,18 +243,37 @@ body {
 
 .close {
     width: 100%;
-
     height: 50px;
 
     margin-top: 15px;
 
     border: none;
-
     border-radius: 25px;
 
     background: #eee;
 
     font-size: 18px;
+}
+
+/* 화면이 작은 아이폰 */
+@media (max-height: 750px) {
+
+    .calculator {
+        bottom: 60px;
+    }
+
+    .buttons {
+        gap: 7px;
+    }
+
+    .buttons button {
+        font-size: 34px;
+    }
+
+    .buttons .operator {
+        font-size: 36px;
+    }
+
 }
 </style>
 </head>
@@ -255,7 +282,7 @@ body {
 
 <div id="backgroundQuestion">?</div>
 
-<img id="photo">
+<img id="photo" alt="사진">
 
 <div class="calculator">
 
@@ -265,58 +292,29 @@ body {
 
     <div class="buttons">
 
-        <!-- 1번째 줄 -->
-
-        <button onclick="clearAll()">AC</button>
-
+        <button class="ac" onclick="clearAll()">AC</button>
         <button onclick="deleteNumber()">⌫</button>
-
         <button onclick="percent()">%</button>
-
         <button class="operator" onclick="operation('÷')">÷</button>
 
-
-        <!-- 2번째 줄 -->
-
         <button onclick="number(7)">7</button>
-
         <button onclick="number(8)">8</button>
-
         <button onclick="number(9)">9</button>
-
         <button class="operator" onclick="operation('×')">×</button>
 
-
-        <!-- 3번째 줄 -->
-
         <button onclick="number(4)">4</button>
-
         <button onclick="number(5)">5</button>
-
         <button onclick="number(6)">6</button>
-
         <button class="operator" onclick="operation('-')">−</button>
 
-
-        <!-- 4번째 줄 -->
-
         <button onclick="number(1)">1</button>
-
         <button onclick="number(2)">2</button>
-
         <button onclick="number(3)">3</button>
-
         <button class="operator" onclick="operation('+')">+</button>
 
-
-        <!-- 5번째 줄 -->
-
         <button onclick="plusMinus()">±</button>
-
-        <button onclick="number(0)">0</button>
-
+        <button class="zero" onclick="number(0)">0</button>
         <button onclick="decimal()">.</button>
-
         <button class="operator" onclick="calculate()">=</button>
 
     </div>
@@ -332,55 +330,55 @@ body {
     <div class="photoSetting">
         <span>1번</span>
         <input type="file" accept="image/*"
-               onchange="setPhoto(1,this)">
+        onchange="setPhoto(1,this)">
     </div>
 
     <div class="photoSetting">
         <span>2번</span>
         <input type="file" accept="image/*"
-               onchange="setPhoto(2,this)">
+        onchange="setPhoto(2,this)">
     </div>
 
     <div class="photoSetting">
         <span>3번</span>
         <input type="file" accept="image/*"
-               onchange="setPhoto(3,this)">
+        onchange="setPhoto(3,this)">
     </div>
 
     <div class="photoSetting">
         <span>4번</span>
         <input type="file" accept="image/*"
-               onchange="setPhoto(4,this)">
+        onchange="setPhoto(4,this)">
     </div>
 
     <div class="photoSetting">
         <span>5번</span>
         <input type="file" accept="image/*"
-               onchange="setPhoto(5,this)">
+        onchange="setPhoto(5,this)">
     </div>
 
     <div class="photoSetting">
         <span>6번</span>
         <input type="file" accept="image/*"
-               onchange="setPhoto(6,this)">
+        onchange="setPhoto(6,this)">
     </div>
 
     <div class="photoSetting">
         <span>7번</span>
         <input type="file" accept="image/*"
-               onchange="setPhoto(7,this)">
+        onchange="setPhoto(7,this)">
     </div>
 
     <div class="photoSetting">
         <span>8번</span>
         <input type="file" accept="image/*"
-               onchange="setPhoto(8,this)">
+        onchange="setPhoto(8,this)">
     </div>
 
     <div class="photoSetting">
         <span>9번</span>
         <input type="file" accept="image/*"
-               onchange="setPhoto(9,this)">
+        onchange="setPhoto(9,this)">
     </div>
 
     <button class="close" onclick="closeSettings()">
@@ -409,7 +407,6 @@ for (let i = 1; i <= 9; i++) {
     if (saved) {
         photos[i] = saved;
     }
-
 }
 
 
@@ -428,14 +425,13 @@ function number(n) {
         current = String(n);
 
         showPhoto(n);
-
     }
 
     waiting = false;
 }
 
 
-/* 사진 보여주기 */
+/* 사진 표시 */
 
 function showPhoto(n) {
 
@@ -444,7 +440,6 @@ function showPhoto(n) {
 
     let photo =
         document.getElementById("photo");
-
 
     if (photos[n]) {
 
@@ -459,12 +454,11 @@ function showPhoto(n) {
         question.style.display = "block";
 
         photo.style.display = "none";
-
     }
 }
 
 
-/* ? 보여주기 */
+/* ? 표시 */
 
 function showQuestion() {
 
@@ -494,7 +488,6 @@ function decimal() {
     if (!current.includes(".")) {
 
         current += ".";
-
     }
 }
 
@@ -503,7 +496,10 @@ function decimal() {
 
 function operation(x) {
 
-    if (current === "") return;
+    if (current === "") {
+
+        current = "0";
+    }
 
     previous = current;
 
@@ -521,15 +517,14 @@ function calculate() {
         previous === "" ||
         current === "" ||
         op === ""
-    ) return;
-
+    ) {
+        return;
+    }
 
     let a = Number(previous);
-
     let b = Number(current);
 
-    let result;
-
+    let result = 0;
 
     if (op === "+") {
         result = a + b;
@@ -557,11 +552,9 @@ function calculate() {
         result = a / b;
     }
 
-
     current = String(result);
 
     previous = "";
-
     op = "";
 
     waiting = true;
@@ -570,16 +563,13 @@ function calculate() {
 }
 
 
-/* 전체 삭제 */
+/* AC */
 
 function clearAll() {
 
     current = "";
-
     previous = "";
-
     op = "";
-
     waiting = false;
 
     showQuestion();
@@ -590,24 +580,14 @@ function clearAll() {
 
 function deleteNumber() {
 
-    if (current === "") return;
-
-    if (current === "Error") {
-
-        clearAll();
-
+    if (current === "") {
         return;
     }
 
-
-    current =
-        current.slice(0, -1);
-
+    current = current.slice(0, -1);
 
     if (current === "") {
-
         showQuestion();
-
     }
 }
 
@@ -616,10 +596,11 @@ function deleteNumber() {
 
 function percent() {
 
-    if (current === "") return;
+    if (current === "") {
+        return;
+    }
 
-    current =
-        String(Number(current) / 100);
+    current = String(Number(current) / 100);
 }
 
 
@@ -627,10 +608,11 @@ function percent() {
 
 function plusMinus() {
 
-    if (current === "") return;
+    if (current === "") {
+        return;
+    }
 
-    current =
-        String(Number(current) * -1);
+    current = String(Number(current) * -1);
 }
 
 
@@ -640,16 +622,15 @@ function setPhoto(n, input) {
 
     let file = input.files[0];
 
-    if (!file) return;
-
+    if (!file) {
+        return;
+    }
 
     let reader = new FileReader();
-
 
     reader.onload = function(e) {
 
         photos[n] = e.target.result;
-
 
         try {
 
@@ -660,13 +641,9 @@ function setPhoto(n, input) {
 
         } catch (error) {
 
-            alert(
-                "사진 용량이 너무 커서 저장하지 못했습니다."
-            );
-
+            alert("사진 용량이 너무 큽니다.");
         }
     };
-
 
     reader.readAsDataURL(file);
 }
