@@ -14,37 +14,41 @@
 }
 
 html, body {
+    margin: 0;
+    padding: 0;
     width: 100%;
     height: 100%;
-    margin: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: white;
 }
 
 body {
-    background: white;
-    color: black;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
     position: relative;
 }
 
 /* 가운데 ? */
+
 #backgroundQuestion {
     position: fixed;
     left: 50%;
     top: 50%;
-
     transform: translate(-50%, -50%);
 
-    font-size: 300px;
+    font-size: min(55vw, 500px);
     font-weight: bold;
 
     color: black;
 
-    z-index: 0;
+    z-index: 1;
+
     pointer-events: none;
+
+    line-height: 1;
 }
 
 /* 사진 */
+
 #photo {
     position: fixed;
 
@@ -53,150 +57,158 @@ body {
 
     transform: translate(-50%, -50%);
 
-    width: 70vw;
-    max-width: 350px;
+    width: 65vw;
+    height: 65vw;
 
-    max-height: 45vh;
+    max-width: 500px;
+    max-height: 500px;
 
     object-fit: contain;
 
-    z-index: 0;
-
-    display: none;
+    z-index: 1;
 
     pointer-events: none;
+
+    display: none;
 }
 
 /* 계산기 */
 
 .calculator {
-    width: 100%;
-    max-width: 500px;
+    position: relative;
+
+    width: min(100%, 500px);
+
     height: 100vh;
 
     margin: auto;
-    padding: 15px;
+
+    padding:
+        max(20px, env(safe-area-inset-top))
+        20px
+        max(20px, env(safe-area-inset-bottom))
+        20px;
 
     display: flex;
     flex-direction: column;
 
-    position: relative;
-    z-index: 2;
-}
-
-/* 화면 */
-
-.display {
-    flex: 1;
-
-    display: flex;
     justify-content: flex-end;
-    align-items: flex-end;
 
-    padding: 20px 10px;
-
-    overflow: hidden;
+    z-index: 10;
 }
 
-#result {
-    font-size: 80px;
-    font-weight: 300;
+/* 사진 설정 버튼 */
 
+.setting {
+    position: absolute;
+
+    top: max(35px, calc(env(safe-area-inset-top) + 15px));
+    left: 25px;
+
+    width: 125px;
+    height: 55px;
+
+    border-radius: 30px;
+
+    border: 1px solid #ddd;
+
+    background: rgba(255,255,255,0.75);
+
+    font-size: 18px;
     color: black;
+
+    box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+
+    z-index: 50;
+
+    cursor: pointer;
+
+    touch-action: manipulation;
 }
 
-/* 버튼 */
+/* 버튼 영역 */
 
 .buttons {
+    width: 100%;
+
     display: grid;
 
     grid-template-columns: repeat(4, 1fr);
 
     gap: 12px;
 
-    padding-bottom: 15px;
+    position: relative;
+
+    z-index: 20;
 }
 
-button {
-    border: none;
+/* 모든 계산기 버튼 */
+
+.buttons button {
+    width: 100%;
+    aspect-ratio: 1 / 1;
 
     border-radius: 50%;
 
-    aspect-ratio: 1;
+    border: 1px solid #ddd;
 
-    font-size: 35px;
+    background: rgba(255,255,255,0.62);
 
     color: black;
 
-    background: rgba(255, 255, 255, 0.35);
+    font-size: clamp(28px, 9vw, 44px);
 
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    box-shadow:
-        inset 0 0 0 1px rgba(0,0,0,0.15),
-        0 2px 8px rgba(0,0,0,0.12);
+    padding: 0;
+
+    box-shadow: 0 3px 12px rgba(0,0,0,0.10);
 
     cursor: pointer;
 
-    transition: transform 0.08s;
+    touch-action: manipulation;
+
+    position: relative;
+
+    z-index: 30;
 }
 
-button:active {
+/* 버튼 눌렀을 때 */
+
+.buttons button:active {
     transform: scale(0.94);
-
-    background: rgba(0,0,0,0.18);
+    background: rgba(220,220,220,0.75);
 }
 
-.gray {
-    background: rgba(255,255,255,0.35);
-    color: black;
+/* AC */
+
+.ac {
+    grid-column: span 2;
+
+    border-radius: 50% !important;
+
+    font-size: clamp(30px, 9vw, 44px) !important;
 }
 
-.orange {
-    background: rgba(255,255,255,0.35);
-    color: black;
-}
+/* 0 */
 
 .zero {
     grid-column: span 2;
 
-    border-radius: 50px;
+    aspect-ratio: 2.05 / 1 !important;
 
-    text-align: left;
-
-    padding-left: 30px;
+    border-radius: 50px !important;
 }
 
+/* 연산 버튼 */
 
-/* 사진 설정 버튼 */
-
-.setting {
-    position: fixed;
-
-    top: 15px;
-    left: 15px;
-
-    width: auto;
-    height: auto;
-
-    min-width: 80px;
-
-    padding: 10px 15px;
-
-    border-radius: 20px;
-
-    aspect-ratio: auto;
-
-    font-size: 15px;
-
-    z-index: 10;
-
-    background: rgba(255,255,255,0.55);
+.operator {
+    font-size: clamp(30px, 9vw, 44px) !important;
 }
 
-
-/* 설정 창 */
+/* 설정창 */
 
 #settings {
     position: fixed;
@@ -206,25 +218,21 @@ button:active {
 
     transform: translate(-50%, -50%);
 
-    width: 90%;
-    max-width: 380px;
+    width: min(90vw, 400px);
 
     max-height: 80vh;
 
     overflow-y: auto;
 
-    padding: 20px;
+    background: white;
 
     border-radius: 25px;
 
-    background: rgba(255,255,255,0.88);
+    padding: 25px;
 
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
 
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-
-    z-index: 20;
+    z-index: 100;
 
     display: none;
 }
@@ -236,192 +244,174 @@ button:active {
 
 .photoSetting {
     display: flex;
+
     align-items: center;
+
+    justify-content: space-between;
+
     gap: 10px;
 
-    margin: 10px 0;
-}
+    margin: 12px 0;
 
-.photoSetting span {
-    width: 25px;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 18px;
 }
 
 .photoSetting input {
-    flex: 1;
+    max-width: 190px;
 }
 
 .close {
     width: 100%;
+
     height: 50px;
-
-    aspect-ratio: auto;
-
-    border-radius: 20px;
 
     margin-top: 15px;
 
-    background: rgba(0,0,0,0.1);
+    border: none;
+
+    border-radius: 25px;
+
+    background: #eee;
 
     font-size: 18px;
+}
+
+/* 작은 화면 */
+
+@media (max-height: 700px) {
+
+    .buttons {
+        gap: 8px;
+    }
+
+    .calculator {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
 }
 
 </style>
 </head>
 
-
 <body>
 
-
-<!-- 처음에는 ? -->
+<!-- 가운데 ? -->
 
 <div id="backgroundQuestion">?</div>
 
+<!-- 사진 -->
 
-<!-- 선택된 사진 -->
-
-<img id="photo" src="">
-
-
-<!-- 사진 설정 버튼 -->
-
-<button class="setting" onclick="openSettings()">
-    사진 설정
-</button>
-
-
-<!-- 설정 창 -->
-
-<div id="settings">
-
-    <h2>숫자별 사진 설정</h2>
-
-    <div class="photoSetting">
-        <span>1</span>
-        <input type="file" accept="image/*" onchange="setPhoto(1, this)">
-    </div>
-
-    <div class="photoSetting">
-        <span>2</span>
-        <input type="file" accept="image/*" onchange="setPhoto(2, this)">
-    </div>
-
-    <div class="photoSetting">
-        <span>3</span>
-        <input type="file" accept="image/*" onchange="setPhoto(3, this)">
-    </div>
-
-    <div class="photoSetting">
-        <span>4</span>
-        <input type="file" accept="image/*" onchange="setPhoto(4, this)">
-    </div>
-
-    <div class="photoSetting">
-        <span>5</span>
-        <input type="file" accept="image/*" onchange="setPhoto(5, this)">
-    </div>
-
-    <div class="photoSetting">
-        <span>6</span>
-        <input type="file" accept="image/*" onchange="setPhoto(6, this)">
-    </div>
-
-    <div class="photoSetting">
-        <span>7</span>
-        <input type="file" accept="image/*" onchange="setPhoto(7, this)">
-    </div>
-
-    <div class="photoSetting">
-        <span>8</span>
-        <input type="file" accept="image/*" onchange="setPhoto(8, this)">
-    </div>
-
-    <div class="photoSetting">
-        <span>9</span>
-        <input type="file" accept="image/*" onchange="setPhoto(9, this)">
-    </div>
-
-    <button class="close" onclick="closeSettings()">
-        완료
-    </button>
-
-</div>
-
+<img id="photo">
 
 <!-- 계산기 -->
 
 <div class="calculator">
 
-    <div class="display">
-        <div id="result">0</div>
-    </div>
-
+    <button class="setting" onclick="openSettings()">
+        사진 설정
+    </button>
 
     <div class="buttons">
 
-        <button class="gray" onclick="clearAll()">AC</button>
+        <button class="ac" onclick="clearAll()">AC</button>
 
-        <button class="gray" onclick="deleteNumber()">⌫</button>
+        <button onclick="deleteNumber()">⌫</button>
 
-        <button class="gray" onclick="percent()">%</button>
+        <button onclick="percent()">%</button>
 
-        <button class="orange" onclick="operation('÷')">÷</button>
-
+        <button class="operator" onclick="operation('÷')">÷</button>
 
         <button onclick="number(7)">7</button>
-
         <button onclick="number(8)">8</button>
-
         <button onclick="number(9)">9</button>
-
-        <button class="orange" onclick="operation('×')">×</button>
-
+        <button class="operator" onclick="operation('×')">×</button>
 
         <button onclick="number(4)">4</button>
-
         <button onclick="number(5)">5</button>
-
         <button onclick="number(6)">6</button>
-
-        <button class="orange" onclick="operation('−')">−</button>
-
+        <button class="operator" onclick="operation('-')">−</button>
 
         <button onclick="number(1)">1</button>
-
         <button onclick="number(2)">2</button>
-
         <button onclick="number(3)">3</button>
+        <button class="operator" onclick="operation('+')">+</button>
 
-        <button class="orange" onclick="operation('+')">+</button>
-
-
-        <button class="gray" onclick="plusMinus()">+/−</button>
-
+        <button onclick="plusMinus()">±</button>
         <button class="zero" onclick="number(0)">0</button>
-
         <button onclick="decimal()">.</button>
 
-        <button class="orange" onclick="calculate()">=</button>
+        <button class="operator" onclick="calculate()">=</button>
 
     </div>
+
+</div>
+
+
+<!-- 사진 설정창 -->
+
+<div id="settings">
+
+    <h2>사진 설정</h2>
+
+    <div class="photoSetting">
+        <span>1번 사진</span>
+        <input type="file" accept="image/*" onchange="setPhoto(1,this)">
+    </div>
+
+    <div class="photoSetting">
+        <span>2번 사진</span>
+        <input type="file" accept="image/*" onchange="setPhoto(2,this)">
+    </div>
+
+    <div class="photoSetting">
+        <span>3번 사진</span>
+        <input type="file" accept="image/*" onchange="setPhoto(3,this)">
+    </div>
+
+    <div class="photoSetting">
+        <span>4번 사진</span>
+        <input type="file" accept="image/*" onchange="setPhoto(4,this)">
+    </div>
+
+    <div class="photoSetting">
+        <span>5번 사진</span>
+        <input type="file" accept="image/*" onchange="setPhoto(5,this)">
+    </div>
+
+    <div class="photoSetting">
+        <span>6번 사진</span>
+        <input type="file" accept="image/*" onchange="setPhoto(6,this)">
+    </div>
+
+    <div class="photoSetting">
+        <span>7번 사진</span>
+        <input type="file" accept="image/*" onchange="setPhoto(7,this)">
+    </div>
+
+    <div class="photoSetting">
+        <span>8번 사진</span>
+        <input type="file" accept="image/*" onchange="setPhoto(8,this)">
+    </div>
+
+    <div class="photoSetting">
+        <span>9번 사진</span>
+        <input type="file" accept="image/*" onchange="setPhoto(9,this)">
+    </div>
+
+    <button class="close" onclick="closeSettings()">
+        닫기
+    </button>
 
 </div>
 
 
 <script>
 
-
-let current = "0";
-
-let first = null;
-
-let operator = null;
-
+let current = "";
+let previous = "";
+let op = "";
 let waiting = false;
-
-
-/* 숫자별 사진 */
 
 let photos = {};
 
@@ -439,21 +429,9 @@ for (let i = 1; i <= 9; i++) {
 }
 
 
-/* 화면 */
-
-function show() {
-
-    document.getElementById("result").innerText = current;
-
-}
-
-
-/* 숫자를 눌렀을 때 */
+/* 숫자 */
 
 function number(n) {
-
-
-    /* 0을 누르면 ? */
 
     if (n === 0) {
 
@@ -461,12 +439,7 @@ function number(n) {
 
         showQuestion();
 
-    }
-
-
-    /* 1~9를 누르면 사진 */
-
-    else {
+    } else {
 
         current = String(n);
 
@@ -474,15 +447,12 @@ function number(n) {
 
     }
 
-
-    /* 계산 대기 상태 */
-
     waiting = false;
 
 }
 
 
-/* 사진 보여주기 */
+/* 사진 표시 */
 
 function showPhoto(n) {
 
@@ -501,9 +471,7 @@ function showPhoto(n) {
 
         photo.style.display = "block";
 
-    }
-
-    else {
+    } else {
 
         question.style.display = "block";
 
@@ -514,14 +482,13 @@ function showPhoto(n) {
 }
 
 
-/* ? 보여주기 */
+/* ? 표시 */
 
 function showQuestion() {
 
     document.getElementById(
         "backgroundQuestion"
     ).style.display = "block";
-
 
     document.getElementById(
         "photo"
@@ -534,53 +501,33 @@ function showQuestion() {
 
 function decimal() {
 
-    if (current === "오류") {
-        clearAll();
-    }
-
-
     if (waiting) {
 
         current = "0.";
-
         waiting = false;
+
+        return;
 
     }
 
-    else if (!current.includes(".")) {
+    if (!current.includes(".")) {
 
         current += ".";
 
     }
-
-
-    show();
 
 }
 
 
 /* 연산 */
 
-function operation(op) {
+function operation(x) {
 
-    if (current === "오류") {
-        return;
-    }
+    if (current === "") return;
 
+    previous = current;
 
-    if (
-        operator !== null &&
-        !waiting
-    ) {
-
-        calculate();
-
-    }
-
-
-    first = Number(current);
-
-    operator = op;
+    op = x;
 
     waiting = true;
 
@@ -592,126 +539,89 @@ function operation(op) {
 function calculate() {
 
     if (
-        operator === null ||
-        first === null
-    ) {
+        previous === "" ||
+        current === "" ||
+        op === ""
+    ) return;
 
-        return;
 
+    let a = Number(previous);
+    let b = Number(current);
+
+    let result;
+
+
+    if (op === "+") {
+        result = a + b;
     }
 
-
-    let second = Number(current);
-
-    let answer;
-
-
-    if (operator === "+") {
-
-        answer = first + second;
-
+    if (op === "-") {
+        result = a - b;
     }
 
-    else if (operator === "−") {
-
-        answer = first - second;
-
+    if (op === "×") {
+        result = a * b;
     }
 
-    else if (operator === "×") {
+    if (op === "÷") {
 
-        answer = first * second;
+        if (b === 0) {
 
-    }
-
-    else if (operator === "÷") {
-
-        if (second === 0) {
-
-            current = "오류";
-
-            first = null;
-
-            operator = null;
-
-            show();
+            current = "Error";
 
             return;
 
         }
 
-        answer = first / second;
+        result = a / b;
 
     }
 
 
-    current =
-        String(Number(answer.toPrecision(12)));
+    current = String(result);
 
+    previous = "";
 
-    first = null;
-
-    operator = null;
+    op = "";
 
     waiting = true;
 
-
-    show();
-
 }
 
 
-/* AC */
+/* 전체 삭제 */
 
 function clearAll() {
 
-    current = "0";
-
-    first = null;
-
-    operator = null;
-
+    current = "";
+    previous = "";
+    op = "";
     waiting = false;
 
-
     showQuestion();
-
-    show();
 
 }
 
 
-/* 삭제 */
+/* 한 글자 삭제 */
 
 function deleteNumber() {
 
     if (
-        waiting ||
-        current === "오류"
-    ) {
-
-        return;
-
-    }
+        current === "" ||
+        current === "Error"
+    ) return;
 
 
-    if (current.length === 1) {
+    current =
+        current.slice(0, -1);
 
-        current = "0";
+
+    if (current === "") {
 
         showQuestion();
 
     }
-
-    else {
-
-        current =
-            current.slice(0, -1);
-
-    }
-
-
-    show();
 
 }
 
@@ -720,50 +630,62 @@ function deleteNumber() {
 
 function percent() {
 
-    if (current === "오류") {
-        return;
-    }
-
+    if (current === "") return;
 
     current =
         String(Number(current) / 100);
 
+}
 
-    show();
+
+/* + / - */
+
+function plusMinus() {
+
+    if (current === "") return;
+
+    current =
+        String(Number(current) * -1);
 
 }
 
 
-/* +/− */
+/* 사진 저장 */
 
-function plusMinus() {
+function setPhoto(n, input) {
 
-    if (
-        current === "0" ||
-        current === "오류"
-    ) {
+    let file = input.files[0];
 
-        return;
-
-    }
+    if (!file) return;
 
 
-    if (current.startsWith("-")) {
-
-        current =
-            current.substring(1);
-
-    }
-
-    else {
-
-        current =
-            "-" + current;
-
-    }
+    let reader = new FileReader();
 
 
-    show();
+    reader.onload = function(e) {
+
+        photos[n] = e.target.result;
+
+
+        try {
+
+            localStorage.setItem(
+                "photo" + n,
+                e.target.result
+            );
+
+        } catch (error) {
+
+            alert(
+                "사진 용량이 너무 커서 저장하지 못했습니다."
+            );
+
+        }
+
+    };
+
+
+    reader.readAsDataURL(file);
 
 }
 
@@ -788,55 +710,6 @@ function closeSettings() {
     ).style.display = "none";
 
 }
-
-
-/* 사진 선택 */
-
-function setPhoto(n, input) {
-
-    let file = input.files[0];
-
-    if (!file) {
-        return;
-    }
-
-
-    let reader = new FileReader();
-
-
-    reader.onload = function(e) {
-
-        photos[n] = e.target.result;
-
-
-        /*
-        사진을 브라우저에 저장
-        */
-
-        try {
-
-            localStorage.setItem(
-                "photo" + n,
-                e.target.result
-            );
-
-        }
-
-        catch (error) {
-
-            alert(
-                "사진 용량이 너무 커서 저장하지 못했습니다."
-            );
-
-        }
-
-    };
-
-
-    reader.readAsDataURL(file);
-
-}
-
 
 </script>
 
