@@ -2,188 +2,242 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>사진 계산기</title>
 
 <style>
 * {
-    box-sizing: border-box;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-    background: white;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: white;
+  font-family: Arial, sans-serif;
 }
 
 body {
-    position: relative;
+  position: relative;
 }
 
-/* 배경 ? */
+/* 가운데 물음표 */
 #backgroundQuestion {
-    position: fixed;
-    left: 50%;
-    top: 45%;
-    transform: translate(-50%, -50%);
-    font-size: 65vw;
-    font-weight: bold;
-    line-height: 1;
-    color: black;
-    z-index: 1;
-    pointer-events: none;
+  position: fixed;
+  left: 50%;
+  top: 43%;
+  transform: translate(-50%, -50%);
+  font-size: 430px;
+  font-weight: bold;
+  line-height: 1;
+  color: black;
+  z-index: 1;
+  pointer-events: none;
 }
 
 /* 사진 */
 #photo {
-    position: fixed;
-    left: 50%;
-    top: 42%;
-    transform: translate(-50%, -50%);
-    width: 70vw;
-    height: 50vh;
-    object-fit: contain;
-    display: none;
-    z-index: 2;
-    pointer-events: none;
+  position: fixed;
+  left: 50%;
+  top: 43%;
+  transform: translate(-50%, -50%);
+  width: 65vw;
+  height: 65vw;
+  max-width: 420px;
+  max-height: 420px;
+  object-fit: contain;
+  z-index: 1;
+  pointer-events: none;
+  display: none;
 }
 
 /* 계산기 */
 .calculator {
-    position: fixed;
-    width: min(94vw, 430px);
-    left: 50%;
-    bottom: 20px;
-    transform: translateX(-50%);
-    z-index: 10;
+  position: fixed;
+  left: 50%;
+  bottom: 80px;
+  transform: translateX(-50%);
+  width: calc(100vw - 40px);
+  max-width: 430px;
+  z-index: 10;
 }
 
-/* 버튼 4 x 5 */
-.buttons {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 9px;
-}
-
-/* 모든 버튼 동일 크기 */
-.buttons button {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    padding: 0;
-    margin: 0;
-    border: 1px solid rgba(0,0,0,0.15);
-    border-radius: 50%;
-    background: rgba(255,255,255,0.65);
-    color: black;
-    font-size: clamp(22px, 7vw, 34px);
-    font-weight: 400;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    touch-action: manipulation;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-    cursor: pointer;
-    position: relative;
-    z-index: 20;
-    outline: none;
-}
-
-.buttons button:active {
-    transform: scale(0.93);
-    background: rgba(0,0,0,0.12);
-}
-
-/* 사진 설정 버튼 */
+/* 사진 설정 */
 .setting {
-    width: 100%;
-    margin-top: 9px;
-    padding: 12px;
-    border: 1px solid rgba(0,0,0,0.2);
-    border-radius: 18px;
-    background: rgba(255,255,255,0.8);
-    color: black;
-    font-size: 17px;
-    font-weight: bold;
-    touch-action: manipulation;
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 15px);
+  width: 130px;
+  height: 55px;
+  border: 1px solid #ddd;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.75);
+  color: black;
+  font-size: 18px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* 숫자 표시 */
+#display {
+  width: 100%;
+  min-height: 70px;
+  margin-bottom: 10px;
+  padding: 8px 18px;
+
+  border: 1px solid #ddd;
+  border-radius: 18px;
+
+  background: rgba(255,255,255,0.75);
+  color: black;
+
+  font-size: 42px;
+  line-height: 52px;
+  text-align: right;
+
+  overflow: hidden;
+  white-space: nowrap;
+
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+/* 버튼 배열 */
+.buttons {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.key {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  border: 1px solid #ddd;
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.65);
+  color: black;
+
+  font-size: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+
+  position: relative;
+  z-index: 20;
+
+  cursor: pointer;
+  touch-action: manipulation;
+
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.key.operator {
+  font-size: 42px;
+}
+
+.key:active,
+.key.pressed {
+  transform: scale(0.92);
+  background: rgba(220,220,220,0.8);
 }
 
 /* 설정창 */
 #settings {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 90vw;
-    max-width: 400px;
-    max-height: 80vh;
-    overflow-y: auto;
-    padding: 20px;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    display: none;
-    z-index: 100;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 90vw;
+  max-width: 400px;
+  max-height: 80vh;
+
+  overflow-y: auto;
+
+  padding: 25px;
+
+  background: white;
+  border-radius: 25px;
+
+  box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+
+  z-index: 100;
+  display: none;
 }
 
 #settings h2 {
-    text-align: center;
-    margin: 0 0 15px;
+  margin-top: 0;
+  text-align: center;
 }
 
 .photoSetting {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    background: #f7f7f7;
-}
-
-.photoSetting strong {
-    display: block;
-    margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 14px 0;
+  font-size: 17px;
 }
 
 .photoSetting input {
-    width: 100%;
+  width: 190px;
 }
 
-.closeButton {
-    width: 100%;
-    padding: 12px;
-    margin-top: 5px;
-    border: 0;
-    border-radius: 15px;
-    background: black;
-    color: white;
-    font-size: 17px;
+.close {
+  width: 100%;
+  height: 50px;
+
+  margin-top: 15px;
+
+  border: none;
+  border-radius: 25px;
+
+  background: #eee;
+
+  font-size: 18px;
+  cursor: pointer;
 }
 
-/* 작은 화면 */
-@media (max-height: 700px) {
-    .calculator {
-        bottom: 8px;
-    }
+@media (max-height: 750px) {
 
-    .buttons {
-        gap: 6px;
-    }
+  .calculator {
+    bottom: 60px;
+  }
 
-    .setting {
-        margin-top: 5px;
-        padding: 8px;
-    }
+  .buttons {
+    gap: 7px;
+  }
+
+  .key {
+    font-size: 34px;
+  }
+
+  .key.operator {
+    font-size: 36px;
+  }
+
+  #display {
+    min-height: 60px;
+    font-size: 36px;
+  }
 }
 </style>
 </head>
@@ -196,458 +250,615 @@ body {
 
 <div class="calculator">
 
-    <div class="buttons">
+  <div class="setting"
+       id="settingsBtn"
+       role="button"
+       tabindex="0">
+    사진 설정
+  </div>
 
-        <button type="button" data-action="clear">AC</button>
-        <button type="button" data-action="delete">⌫</button>
-        <button type="button" data-action="percent">%</button>
-        <button type="button" data-op="/">÷</button>
+  <!-- 숫자/결과 표시 -->
+  <div id="display">0</div>
 
-        <button type="button" data-num="7">7</button>
-        <button type="button" data-num="8">8</button>
-        <button type="button" data-num="9">9</button>
-        <button type="button" data-op="*">×</button>
+  <div class="buttons" id="buttons">
 
-        <button type="button" data-num="4">4</button>
-        <button type="button" data-num="5">5</button>
-        <button type="button" data-num="6">6</button>
-        <button type="button" data-op="-">−</button>
+    <div class="key" data-action="clear">AC</div>
+    <div class="key" data-action="delete">⌫</div>
+    <div class="key" data-action="percent">%</div>
+    <div class="key operator" data-action="op" data-value="÷">÷</div>
 
-        <button type="button" data-num="1">1</button>
-        <button type="button" data-num="2">2</button>
-        <button type="button" data-num="3">3</button>
-        <button type="button" data-op="+">+</button>
+    <div class="key" data-action="number" data-value="7">7</div>
+    <div class="key" data-action="number" data-value="8">8</div>
+    <div class="key" data-action="number" data-value="9">9</div>
+    <div class="key operator" data-action="op" data-value="×">×</div>
 
-        <button type="button" data-action="plusminus">±</button>
-        <button type="button" data-num="0">0</button>
-        <button type="button" data-action="decimal">.</button>
-        <button type="button" data-action="equals">=</button>
+    <div class="key" data-action="number" data-value="4">4</div>
+    <div class="key" data-action="number" data-value="5">5</div>
+    <div class="key" data-action="number" data-value="6">6</div>
+    <div class="key operator" data-action="op" data-value="-">−</div>
 
-    </div>
+    <div class="key" data-action="number" data-value="1">1</div>
+    <div class="key" data-action="number" data-value="2">2</div>
+    <div class="key" data-action="number" data-value="3">3</div>
+    <div class="key operator" data-action="op" data-value="+">+</div>
 
-    <button type="button" class="setting" id="openSettings">
-        사진 설정
-    </button>
+    <div class="key" data-action="plusminus">±</div>
+    <div class="key" data-action="number" data-value="0">0</div>
+    <div class="key" data-action="decimal">.</div>
+    <div class="key operator" data-action="calculate">=</div>
 
+  </div>
 </div>
-
-
-<!-- 사진 설정창 -->
 
 <div id="settings">
 
-    <h2>사진 설정</h2>
+  <h2>사진 설정</h2>
 
-    <div class="photoSetting">
-        <strong>1번 사진</strong>
-        <input type="file" accept="image/*" data-photo="1">
-    </div>
+  <div class="photoSetting">
+    <span>1번</span>
+    <input type="file" accept="image/*" data-photo="1">
+  </div>
 
-    <div class="photoSetting">
-        <strong>2번 사진</strong>
-        <input type="file" accept="image/*" data-photo="2">
-    </div>
+  <div class="photoSetting">
+    <span>2번</span>
+    <input type="file" accept="image/*" data-photo="2">
+  </div>
 
-    <div class="photoSetting">
-        <strong>3번 사진</strong>
-        <input type="file" accept="image/*" data-photo="3">
-    </div>
+  <div class="photoSetting">
+    <span>3번</span>
+    <input type="file" accept="image/*" data-photo="3">
+  </div>
 
-    <div class="photoSetting">
-        <strong>4번 사진</strong>
-        <input type="file" accept="image/*" data-photo="4">
-    </div>
+  <div class="photoSetting">
+    <span>4번</span>
+    <input type="file" accept="image/*" data-photo="4">
+  </div>
 
-    <div class="photoSetting">
-        <strong>5번 사진</strong>
-        <input type="file" accept="image/*" data-photo="5">
-    </div>
+  <div class="photoSetting">
+    <span>5번</span>
+    <input type="file" accept="image/*" data-photo="5">
+  </div>
 
-    <div class="photoSetting">
-        <strong>6번 사진</strong>
-        <input type="file" accept="image/*" data-photo="6">
-    </div>
+  <div class="photoSetting">
+    <span>6번</span>
+    <input type="file" accept="image/*" data-photo="6">
+  </div>
 
-    <div class="photoSetting">
-        <strong>7번 사진</strong>
-        <input type="file" accept="image/*" data-photo="7">
-    </div>
+  <div class="photoSetting">
+    <span>7번</span>
+    <input type="file" accept="image/*" data-photo="7">
+  </div>
 
-    <div class="photoSetting">
-        <strong>8번 사진</strong>
-        <input type="file" accept="image/*" data-photo="8">
-    </div>
+  <div class="photoSetting">
+    <span>8번</span>
+    <input type="file" accept="image/*" data-photo="8">
+  </div>
 
-    <div class="photoSetting">
-        <strong>9번 사진</strong>
-        <input type="file" accept="image/*" data-photo="9">
-    </div>
+  <div class="photoSetting">
+    <span>9번</span>
+    <input type="file" accept="image/*" data-photo="9">
+  </div>
 
-    <button type="button" class="closeButton" id="closeSettings">
-        닫기
-    </button>
+  <div class="close" id="closeBtn">
+    닫기
+  </div>
 
 </div>
 
-
 <script>
-/* 사진 불러오기 */
+
+let current = "";
+let previous = "";
+let op = "";
+let waiting = false;
 
 let photos = {};
 
-for (let i = 1; i <= 9; i++) {
-    let saved = localStorage.getItem("photo" + i);
+const buttons = document.getElementById("buttons");
+const settings = document.getElementById("settings");
+const settingsBtn = document.getElementById("settingsBtn");
+const closeBtn = document.getElementById("closeBtn");
 
-    if (saved) {
-        photos[i] = saved;
-    }
+const question = document.getElementById("backgroundQuestion");
+const photo = document.getElementById("photo");
+
+const display = document.getElementById("display");
+
+
+/* 표시 */
+function updateDisplay() {
+
+  if (current === "") {
+    display.textContent = "0";
+  } else {
+    display.textContent = current;
+  }
+
 }
-
-
-/* 화면 */
-
-let question = document.getElementById("backgroundQuestion");
-let photo = document.getElementById("photo");
 
 
 /* 사진 표시 */
-
-function showQuestion() {
-    question.style.display = "block";
-    photo.style.display = "none";
-    photo.src = "";
-}
-
 function showPhoto(n) {
-    if (photos[n]) {
-        question.style.display = "none";
-        photo.src = photos[n];
-        photo.style.display = "block";
-    } else {
-        showQuestion();
-    }
+
+  if (photos[n]) {
+
+    question.style.display = "none";
+
+    photo.src = photos[n];
+
+    photo.style.display = "block";
+
+  } else {
+
+    showQuestion();
+
+  }
+
 }
 
 
-/* 계산기 */
+/* 물음표 */
+function showQuestion() {
 
-let current = "0";
-let oldNumber = null;
-let op = null;
-let wait = false;
+  question.style.display = "block";
+
+  photo.style.display = "none";
+
+}
 
 
 /* 숫자 */
-
 function number(n) {
 
-    /* 0을 누르면 ? */
+  if (waiting) {
 
-    if (n === 0) {
-        current = "0";
-        wait = false;
-        showQuestion();
-        return;
-    }
+    current = "";
 
-    if (wait) {
-        current = String(n);
-        wait = false;
+    waiting = false;
+
+  }
+
+  if (n === 0) {
+
+    if (current === "" || current === "0") {
+      current = "0";
     } else {
-        current = String(n);
+      current += "0";
     }
+
+    showQuestion();
+
+  } else {
+
+    if (current === "0") {
+      current = "";
+    }
+
+    current += String(n);
 
     showPhoto(n);
+
+  }
+
+  updateDisplay();
+
 }
 
 
 /* 소수점 */
-
 function decimal() {
 
-    if (wait) {
-        current = "0";
-        wait = false;
+  if (waiting) {
+
+    current = "0.";
+
+    waiting = false;
+
+  } else {
+
+    if (current === "") {
+      current = "0.";
+    }
+    else if (!current.includes(".")) {
+      current += ".";
     }
 
-    if (!current.includes(".")) {
-        current += ".";
-    }
+  }
+
+  updateDisplay();
+
 }
 
 
 /* 연산 */
+function operation(x) {
 
-function operation(o) {
+  if (current === "") {
+    current = "0";
+  }
 
-    let n = parseFloat(current);
+  previous = current;
 
-    if (oldNumber !== null && op !== null) {
-        calculate();
-        n = parseFloat(current);
-    }
+  op = x;
 
-    oldNumber = n;
-    op = o;
-    wait = true;
+  waiting = true;
+
+  updateDisplay();
+
 }
 
 
 /* 계산 */
-
 function calculate() {
 
-    if (oldNumber === null || op === null) {
-        return;
+  if (previous === "" || current === "" || op === "") {
+    return;
+  }
+
+  const a = Number(previous);
+  const b = Number(current);
+
+  let result = 0;
+
+
+  if (op === "+") {
+
+    result = a + b;
+
+  }
+  else if (op === "-") {
+
+    result = a - b;
+
+  }
+  else if (op === "×") {
+
+    result = a * b;
+
+  }
+  else if (op === "÷") {
+
+    if (b === 0) {
+
+      current = "Error";
+
+      showQuestion();
+
+      updateDisplay();
+
+      return;
+
     }
 
-    let n = parseFloat(current);
-    let result;
+    result = a / b;
+
+  }
 
 
-    if (op === "+") {
-        result = oldNumber + n;
-    }
+  current = String(result);
 
-    if (op === "-") {
-        result = oldNumber - n;
-    }
+  previous = "";
 
-    if (op === "*") {
-        result = oldNumber * n;
-    }
+  op = "";
 
-    if (op === "/") {
+  waiting = true;
 
-        if (n === 0) {
-            current = "Error";
-            oldNumber = null;
-            op = null;
-            showQuestion();
-            return;
-        }
+  showQuestion();
 
-        result = oldNumber / n;
-    }
+  updateDisplay();
 
-
-    current = String(result);
-
-    oldNumber = null;
-    op = null;
-    wait = true;
 }
 
 
 /* AC */
-
 function clearAll() {
 
-    current = "0";
-    oldNumber = null;
-    op = null;
-    wait = false;
+  current = "";
 
-    showQuestion();
+  previous = "";
+
+  op = "";
+
+  waiting = false;
+
+  showQuestion();
+
+  updateDisplay();
+
 }
 
 
 /* 삭제 */
-
 function deleteNumber() {
 
-    if (current === "Error") {
-        current = "0";
-        showQuestion();
-        return;
-    }
+  if (current === "") {
+    return;
+  }
 
-    if (current.length <= 1) {
-        current = "0";
-    } else {
-        current = current.slice(0, -1);
-    }
+  current = current.slice(0, -1);
+
+  if (current === "") {
+    showQuestion();
+  }
+
+  updateDisplay();
+
 }
 
 
 /* 퍼센트 */
-
 function percent() {
 
-    let n = parseFloat(current);
+  if (current === "") {
+    return;
+  }
 
-    current = String(n / 100);
+  current = String(Number(current) / 100);
+
+  updateDisplay();
+
 }
 
 
-/* + / - */
-
+/* +/- */
 function plusMinus() {
 
-    if (current === "0") {
-        return;
-    }
+  if (current === "") {
+    return;
+  }
 
-    if (current.startsWith("-")) {
-        current = current.substring(1);
-    } else {
-        current = "-" + current;
-    }
+  current = String(Number(current) * -1);
+
+  updateDisplay();
+
 }
 
 
-/* 버튼 연결 */
+/* 버튼 실행 */
+function runAction(key) {
 
-let buttons = document.querySelectorAll(".buttons button");
+  const action = key.dataset.action;
 
-buttons.forEach(function(button) {
+  const value = key.dataset.value;
 
-    /* 숫자 */
 
-    if (button.dataset.num !== undefined) {
+  if (action === "number") {
 
-        button.addEventListener("click", function(e) {
+    number(Number(value));
 
-            e.preventDefault();
+  }
+  else if (action === "op") {
 
-            let n = Number(button.dataset.num);
+    operation(value);
 
-            number(n);
-        });
+  }
+  else if (action === "clear") {
+
+    clearAll();
+
+  }
+  else if (action === "delete") {
+
+    deleteNumber();
+
+  }
+  else if (action === "percent") {
+
+    percent();
+
+  }
+  else if (action === "plusminus") {
+
+    plusMinus();
+
+  }
+  else if (action === "decimal") {
+
+    decimal();
+
+  }
+  else if (action === "calculate") {
+
+    calculate();
+
+  }
+
+}
+
+
+/*
+짧게 누르기 = 계산기 작동
+길게 누르기 = 글자 선택/복사
+*/
+
+let touchStartTime = 0;
+let suppressClick = false;
+
+
+buttons.addEventListener(
+  "touchstart",
+  function(e) {
+
+    const key = e.target.closest(".key");
+
+    if (!key) {
+      return;
     }
 
+    touchStartTime = Date.now();
 
-    /* 연산 */
+  },
+  { passive: true }
+);
 
-    if (button.dataset.op !== undefined) {
 
-        button.addEventListener("click", function(e) {
+buttons.addEventListener(
+  "touchend",
+  function(e) {
 
-            e.preventDefault();
+    const key = e.target.closest(".key");
 
-            operation(button.dataset.op);
-        });
+    if (!key) {
+      return;
     }
 
+    const duration = Date.now() - touchStartTime;
 
-    /* 기타 */
+    if (duration < 350) {
 
-    if (button.dataset.action !== undefined) {
+      e.preventDefault();
 
-        button.addEventListener("click", function(e) {
+      key.classList.add("pressed");
 
-            e.preventDefault();
+      setTimeout(function() {
+        key.classList.remove("pressed");
+      }, 100);
 
-            let action = button.dataset.action;
+      runAction(key);
 
+      suppressClick = true;
 
-            if (action === "clear") {
-                clearAll();
-            }
+      setTimeout(function() {
+        suppressClick = false;
+      }, 700);
 
-            if (action === "delete") {
-                deleteNumber();
-            }
+    }
+    else {
 
-            if (action === "percent") {
-                percent();
-            }
+      suppressClick = true;
 
-            if (action === "plusminus") {
-                plusMinus();
-            }
+      setTimeout(function() {
+        suppressClick = false;
+      }, 700);
 
-            if (action === "decimal") {
-                decimal();
-            }
-
-            if (action === "equals") {
-                calculate();
-            }
-        });
     }
 
-
-    /* 길게 눌러 복사 방지 */
-
-    button.addEventListener("contextmenu", function(e) {
-        e.preventDefault();
-    });
-
-});
+  },
+  { passive: false }
+);
 
 
-/* 사진 설정창 */
+/* 마우스 클릭 */
+buttons.addEventListener(
+  "click",
+  function(e) {
 
-let settings = document.getElementById("settings");
-let openSettings = document.getElementById("openSettings");
-let closeSettings = document.getElementById("closeSettings");
+    const key = e.target.closest(".key");
 
+    if (!key) {
+      return;
+    }
 
-openSettings.addEventListener("click", function(e) {
+    if (suppressClick) {
+      return;
+    }
 
-    e.preventDefault();
+    runAction(key);
 
-    settings.style.display = "block";
-});
-
-
-closeSettings.addEventListener("click", function(e) {
-
-    e.preventDefault();
-
-    settings.style.display = "none";
-});
+  }
+);
 
 
-/* 사진 선택 */
+/* 사진 설정 */
+function openSettings() {
 
-let inputs = document.querySelectorAll("input[data-photo]");
+  settings.style.display = "block";
+
+}
 
 
-inputs.forEach(function(input) {
+function closeSettings() {
 
-    input.addEventListener("change", function() {
+  settings.style.display = "none";
 
-        let n = input.dataset.photo;
-        let file = input.files[0];
+}
 
-        if (!file) {
-            return;
+
+settingsBtn.addEventListener(
+  "click",
+  function() {
+
+    openSettings();
+
+  }
+);
+
+
+closeBtn.addEventListener(
+  "click",
+  function() {
+
+    closeSettings();
+
+  }
+);
+
+
+/* 저장된 사진 불러오기 */
+for (let i = 1; i <= 9; i++) {
+
+  const saved = localStorage.getItem("photo" + i);
+
+  if (saved) {
+
+    photos[i] = saved;
+
+  }
+
+}
+
+
+/* 사진 저장 */
+document
+.querySelectorAll("input[data-photo]")
+.forEach(function(input) {
+
+  input.addEventListener(
+    "change",
+    function() {
+
+      const n = Number(input.dataset.photo);
+
+      const file = input.files[0];
+
+      if (!file) {
+        return;
+      }
+
+      const reader = new FileReader();
+
+
+      reader.onload = function(e) {
+
+        photos[n] = e.target.result;
+
+        try {
+
+          localStorage.setItem(
+            "photo" + n,
+            e.target.result
+          );
+
+        }
+        catch (error) {
+
+          alert("사진 용량이 너무 큽니다.");
+
         }
 
-
-        let reader = new FileReader();
-
-
-        reader.onload = function(e) {
-
-            photos[n] = e.target.result;
-
-            try {
-
-                localStorage.setItem(
-                    "photo" + n,
-                    e.target.result
-                );
-
-            } catch (error) {
-
-                alert("사진 용량이 너무 큽니다.");
-            }
-        };
+      };
 
 
-        reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
 
-    });
+    }
+  );
 
 });
 
 
-/* 처음에는 ? */
-
-showQuestion();
+/* 처음 화면 */
+updateDisplay();
 
 </script>
 
