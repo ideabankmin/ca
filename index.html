@@ -1,173 +1,304 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+viewport-fit=cover">
+
 <title>사진 계산기</title>
 
+
 <style>
+
+/* 전체 */
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
+
+html,
+body {
+
   margin: 0;
   padding: 0;
+
   width: 100%;
   height: 100%;
+
   overflow: hidden;
+
   background: white;
+
   font-family: Arial, sans-serif;
 }
+
 
 body {
   position: relative;
 }
 
-/* 가운데 물음표 */
+
+/* =================================
+   배경 물음표
+================================= */
+
 #backgroundQuestion {
+
   position: fixed;
+
   left: 50%;
   top: 43%;
+
   transform: translate(-50%, -50%);
+
   font-size: 430px;
+
   font-weight: bold;
+
   line-height: 1;
+
   color: black;
+
   z-index: 1;
+
   pointer-events: none;
 }
 
-/* 사진 */
+
+/* =================================
+   사진
+================================= */
+
 #photo {
+
   position: fixed;
-  left: 50%;
-  top: 43%;
-  transform: translate(-50%, -50%);
-  width: 65vw;
-  height: 65vw;
-  max-width: 420px;
-  max-height: 420px;
+
+  left: 0;
+  top: 0;
+
+  width: 100vw;
+  height: 100vh;
+
   object-fit: contain;
+
   z-index: 1;
+
   pointer-events: none;
+
   display: none;
 }
 
-/* 계산기 */
+
+/* =================================
+   계산기 전체
+================================= */
+
 .calculator {
+
   position: fixed;
+
   left: 50%;
+
   bottom: 80px;
+
   transform: translateX(-50%);
+
   width: calc(100vw - 40px);
+
   max-width: 430px;
+
   z-index: 10;
 }
 
-/* 사진 설정 */
+
+/* =================================
+   사진 설정 버튼
+================================= */
+
 .setting {
+
   position: absolute;
+
   left: 0;
+
   bottom: calc(100% + 15px);
+
   width: 130px;
   height: 55px;
+
   border: 1px solid #ddd;
+
   border-radius: 30px;
+
   background: rgba(255,255,255,0.75);
+
   color: black;
+
   font-size: 18px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+
+  box-shadow:
+  0 3px 12px rgba(0,0,0,0.12);
+
   z-index: 50;
+
   display: flex;
+
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
+
   touch-action: manipulation;
 }
 
-/* 숫자 표시 */
+
+/* =================================
+   숫자 표시창
+================================= */
+
 #display {
+
   width: 100%;
+
   min-height: 70px;
+
   margin-bottom: 10px;
+
   padding: 8px 18px;
 
   border: 1px solid #ddd;
+
   border-radius: 18px;
 
   background: rgba(255,255,255,0.75);
+
   color: black;
 
   font-size: 42px;
+
   line-height: 52px;
+
   text-align: right;
 
   overflow: hidden;
+
   white-space: nowrap;
 
+  /*
+    표시된 숫자는 길게 눌러
+    복사할 수 있음
+  */
   -webkit-user-select: text;
   user-select: text;
+
   -webkit-touch-callout: default;
 }
 
-/* 버튼 배열 */
+
+/* =================================
+   버튼 배열
+================================= */
+
 .buttons {
+
   width: 100%;
+
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(5, 1fr);
+
+  grid-template-columns:
+  repeat(4, 1fr);
+
+  grid-template-rows:
+  repeat(5, 1fr);
+
   gap: 10px;
 }
 
+
+/* =================================
+   버튼
+================================= */
+
 .key {
+
   width: 100%;
+
   aspect-ratio: 1 / 1;
 
   border: 1px solid #ddd;
+
   border-radius: 50%;
 
-  background: rgba(255,255,255,0.65);
+  background:
+  rgba(255,255,255,0.65);
+
   color: black;
 
   font-size: 40px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
-  box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+  box-shadow:
+  0 3px 12px rgba(0,0,0,0.10);
 
   position: relative;
+
   z-index: 20;
 
   cursor: pointer;
+
   touch-action: manipulation;
 
   -webkit-user-select: none;
   user-select: none;
 }
 
+
 .key.operator {
+
   font-size: 42px;
 }
 
+
+/* 눌렀을 때 */
+
 .key:active,
 .key.pressed {
+
   transform: scale(0.92);
-  background: rgba(220,220,220,0.8);
+
+  background:
+  rgba(220,220,220,0.8);
 }
 
-/* 설정창 */
+
+/* =================================
+   설정창
+================================= */
+
 #settings {
+
   position: fixed;
+
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
+
+  transform:
+  translate(-50%, -50%);
 
   width: 90vw;
+
   max-width: 400px;
+
   max-height: 80vh;
 
   overflow-y: auto;
@@ -175,209 +306,580 @@ body {
   padding: 25px;
 
   background: white;
+
   border-radius: 25px;
 
-  box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+  box-shadow:
+  0 10px 40px rgba(0,0,0,0.25);
 
   z-index: 100;
+
   display: none;
 }
 
+
 #settings h2 {
+
   margin-top: 0;
+
   text-align: center;
 }
 
+
 .photoSetting {
+
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
+
   gap: 8px;
+
   margin: 14px 0;
+
   font-size: 17px;
 }
 
+
 .photoSetting input {
+
   width: 190px;
 }
 
+
 .close {
+
   width: 100%;
+
   height: 50px;
 
   margin-top: 15px;
 
   border: none;
+
   border-radius: 25px;
 
   background: #eee;
 
   font-size: 18px;
+
   cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
 }
+
+
+/* =================================
+   작은 화면
+================================= */
 
 @media (max-height: 750px) {
 
   .calculator {
+
     bottom: 60px;
+
   }
+
 
   .buttons {
+
     gap: 7px;
+
   }
+
 
   .key {
+
     font-size: 34px;
+
   }
+
 
   .key.operator {
+
     font-size: 36px;
+
   }
 
+
   #display {
+
     min-height: 60px;
+
     font-size: 36px;
+
   }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- 배경 ? -->
+
 <div id="backgroundQuestion">?</div>
 
-<img id="photo" alt="사진">
+
+<!-- 사진 -->
+
+<img
+id="photo"
+alt="사진"
+>
+
+
+<!-- =================================
+     계산기
+================================= -->
 
 <div class="calculator">
 
-  <div class="setting"
-       id="settingsBtn"
-       role="button"
-       tabindex="0">
+
+  <!-- 사진 설정 -->
+
+  <div
+  class="setting"
+  id="settingsBtn">
+
     사진 설정
-  </div>
-
-  <!-- 숫자/결과 표시 -->
-  <div id="display">0</div>
-
-  <div class="buttons" id="buttons">
-
-    <div class="key" data-action="clear">AC</div>
-    <div class="key" data-action="delete">⌫</div>
-    <div class="key" data-action="percent">%</div>
-    <div class="key operator" data-action="op" data-value="÷">÷</div>
-
-    <div class="key" data-action="number" data-value="7">7</div>
-    <div class="key" data-action="number" data-value="8">8</div>
-    <div class="key" data-action="number" data-value="9">9</div>
-    <div class="key operator" data-action="op" data-value="×">×</div>
-
-    <div class="key" data-action="number" data-value="4">4</div>
-    <div class="key" data-action="number" data-value="5">5</div>
-    <div class="key" data-action="number" data-value="6">6</div>
-    <div class="key operator" data-action="op" data-value="-">−</div>
-
-    <div class="key" data-action="number" data-value="1">1</div>
-    <div class="key" data-action="number" data-value="2">2</div>
-    <div class="key" data-action="number" data-value="3">3</div>
-    <div class="key operator" data-action="op" data-value="+">+</div>
-
-    <div class="key" data-action="plusminus">±</div>
-    <div class="key" data-action="number" data-value="0">0</div>
-    <div class="key" data-action="decimal">.</div>
-    <div class="key operator" data-action="calculate">=</div>
 
   </div>
+
+
+  <!-- 숫자 표시 -->
+
+  <div id="display">
+
+    0
+
+  </div>
+
+
+  <!-- 버튼 -->
+
+  <div
+  class="buttons"
+  id="buttons">
+
+
+    <!-- 첫째 줄 -->
+
+    <div
+    class="key"
+    data-action="clear">
+
+      AC
+
+    </div>
+
+
+    <div
+    class="key"
+    data-action="delete">
+
+      ⌫
+
+    </div>
+
+
+    <div
+    class="key"
+    data-action="percent">
+
+      %
+
+    </div>
+
+
+    <div
+    class="key operator"
+    data-action="op"
+    data-value="÷">
+
+      ÷
+
+    </div>
+
+
+    <!-- 둘째 줄 -->
+
+    <div
+    class="key"
+    data-action="number"
+    data-value="7">
+
+      7
+
+    </div>
+
+
+    <div
+    class="key"
+    data-action="number"
+    data-value="8">
+
+      8
+
+    </div>
+
+
+    <div
+    class="key"
+    data-action="number"
+    data-value="9">
+
+      9
+
+    </div>
+
+
+    <div
+    class="key operator"
+    data-action="op"
+    data-value="×">
+
+      ×
+
+    </div>
+
+
+    <!-- 셋째 줄 -->
+
+    <div
+    class="key"
+    data-action="number"
+    data-value="4">
+
+      4
+
+    </div>
+
+
+    <div
+    class="key"
+    data-action="number"
+    data-value="5">
+
+      5
+
+    </div>
+
+
+    <div
+    class="key"
+    data-action="number"
+    data-value="6">
+
+      6
+
+    </div>
+
+
+    <div
+    class="key operator"
+    data-action="op"
+    data-value="-">
+
+      −
+
+    </div>
+
+
+    <!-- 넷째 줄 -->
+
+    <div
+    class="key"
+    data-action="number"
+    data-value="1">
+
+      1
+
+    </div>
+
+
+    <div
+    class="key"
+    data-action="number"
+    data-value="2">
+
+      2
+
+    </div>
+
+
+    <div
+    class="key"
+    data-action="number"
+    data-value="3">
+
+      3
+
+    </div>
+
+
+    <div
+    class="key operator"
+    data-action="op"
+    data-value="+">
+
+      +
+
+    </div>
+
+
+    <!-- 다섯째 줄 -->
+
+    <div
+    class="key"
+    data-action="plusminus">
+
+      ±
+
+    </div>
+
+
+    <div
+    class="key"
+    data-action="number"
+    data-value="0">
+
+      0
+
+    </div>
+
+
+    <div
+    class="key"
+    data-action="decimal">
+
+      .
+
+    </div>
+
+
+    <div
+    class="key operator"
+    data-action="calculate">
+
+      =
+
+    </div>
+
+
+  </div>
+
 </div>
+
+
+<!-- =================================
+     사진 설정창
+================================= -->
 
 <div id="settings">
 
-  <h2>사진 설정</h2>
+
+  <h2>
+    사진 설정
+  </h2>
+
 
   <div class="photoSetting">
+
     <span>1번</span>
-    <input type="file" accept="image/*" data-photo="1">
+
+    <input
+    type="file"
+    accept="image/*"
+    data-photo="1">
+
   </div>
 
+
   <div class="photoSetting">
+
     <span>2번</span>
-    <input type="file" accept="image/*" data-photo="2">
+
+    <input
+    type="file"
+    accept="image/*"
+    data-photo="2">
+
   </div>
 
+
   <div class="photoSetting">
+
     <span>3번</span>
-    <input type="file" accept="image/*" data-photo="3">
+
+    <input
+    type="file"
+    accept="image/*"
+    data-photo="3">
+
   </div>
 
+
   <div class="photoSetting">
+
     <span>4번</span>
-    <input type="file" accept="image/*" data-photo="4">
+
+    <input
+    type="file"
+    accept="image/*"
+    data-photo="4">
+
   </div>
 
+
   <div class="photoSetting">
+
     <span>5번</span>
-    <input type="file" accept="image/*" data-photo="5">
+
+    <input
+    type="file"
+    accept="image/*"
+    data-photo="5">
+
   </div>
 
+
   <div class="photoSetting">
+
     <span>6번</span>
-    <input type="file" accept="image/*" data-photo="6">
+
+    <input
+    type="file"
+    accept="image/*"
+    data-photo="6">
+
   </div>
 
+
   <div class="photoSetting">
+
     <span>7번</span>
-    <input type="file" accept="image/*" data-photo="7">
+
+    <input
+    type="file"
+    accept="image/*"
+    data-photo="7">
+
   </div>
 
+
   <div class="photoSetting">
+
     <span>8번</span>
-    <input type="file" accept="image/*" data-photo="8">
+
+    <input
+    type="file"
+    accept="image/*"
+    data-photo="8">
+
   </div>
+
 
   <div class="photoSetting">
+
     <span>9번</span>
-    <input type="file" accept="image/*" data-photo="9">
+
+    <input
+    type="file"
+    accept="image/*"
+    data-photo="9">
+
   </div>
 
-  <div class="close" id="closeBtn">
+
+  <div
+  class="close"
+  id="closeBtn">
+
     닫기
+
   </div>
+
 
 </div>
 
+
 <script>
 
+
+/* =================================
+   계산기 변수
+================================= */
+
 let current = "";
+
 let previous = "";
+
 let op = "";
+
 let waiting = false;
 
 let photos = {};
 
-const buttons = document.getElementById("buttons");
-const settings = document.getElementById("settings");
-const settingsBtn = document.getElementById("settingsBtn");
-const closeBtn = document.getElementById("closeBtn");
 
-const question = document.getElementById("backgroundQuestion");
-const photo = document.getElementById("photo");
+/* 요소 */
 
-const display = document.getElementById("display");
+const buttons =
+document.getElementById("buttons");
+
+const settings =
+document.getElementById("settings");
+
+const settingsBtn =
+document.getElementById("settingsBtn");
+
+const closeBtn =
+document.getElementById("closeBtn");
+
+const question =
+document.getElementById("backgroundQuestion");
+
+const photo =
+document.getElementById("photo");
+
+const display =
+document.getElementById("display");
 
 
-/* 표시 */
+/* =================================
+   숫자 표시
+================================= */
+
 function updateDisplay() {
 
   if (current === "") {
+
     display.textContent = "0";
-  } else {
+
+  }
+  else {
+
     display.textContent = current;
+
   }
 
 }
 
 
-/* 사진 표시 */
+/* =================================
+   사진 표시
+================================= */
+
 function showPhoto(n) {
 
   if (photos[n]) {
@@ -388,7 +890,8 @@ function showPhoto(n) {
 
     photo.style.display = "block";
 
-  } else {
+  }
+  else {
 
     showQuestion();
 
@@ -397,7 +900,10 @@ function showPhoto(n) {
 }
 
 
-/* 물음표 */
+/* =================================
+   물음표 표시
+================================= */
+
 function showQuestion() {
 
   question.style.display = "block";
@@ -407,8 +913,14 @@ function showQuestion() {
 }
 
 
-/* 숫자 */
+/* =================================
+   숫자
+================================= */
+
 function number(n) {
+
+
+  /* 연산자 다음 숫자 */
 
   if (waiting) {
 
@@ -418,20 +930,38 @@ function number(n) {
 
   }
 
+
+  /* 0 */
+
   if (n === 0) {
 
-    if (current === "" || current === "0") {
+    if (
+      current === "" ||
+      current === "0"
+    ) {
+
       current = "0";
-    } else {
+
+    }
+    else {
+
       current += "0";
+
     }
 
     showQuestion();
 
-  } else {
+  }
+
+
+  /* 1~9 */
+
+  else {
 
     if (current === "0") {
+
       current = "";
+
     }
 
     current += String(n);
@@ -440,13 +970,18 @@ function number(n) {
 
   }
 
+
   updateDisplay();
 
 }
 
 
-/* 소수점 */
+/* =================================
+   소수점
+================================= */
+
 function decimal() {
+
 
   if (waiting) {
 
@@ -454,28 +989,43 @@ function decimal() {
 
     waiting = false;
 
-  } else {
+  }
+
+  else {
 
     if (current === "") {
+
       current = "0.";
+
     }
+
     else if (!current.includes(".")) {
+
       current += ".";
+
     }
 
   }
+
 
   updateDisplay();
 
 }
 
 
-/* 연산 */
+/* =================================
+   연산
+================================= */
+
 function operation(x) {
 
+
   if (current === "") {
+
     current = "0";
+
   }
+
 
   previous = current;
 
@@ -483,19 +1033,32 @@ function operation(x) {
 
   waiting = true;
 
+
   updateDisplay();
 
 }
 
 
-/* 계산 */
+/* =================================
+   계산
+================================= */
+
 function calculate() {
 
-  if (previous === "" || current === "" || op === "") {
+
+  if (
+    previous === "" ||
+    current === "" ||
+    op === ""
+  ) {
+
     return;
+
   }
 
+
   const a = Number(previous);
+
   const b = Number(current);
 
   let result = 0;
@@ -506,21 +1069,32 @@ function calculate() {
     result = a + b;
 
   }
+
+
   else if (op === "-") {
 
     result = a - b;
 
   }
+
+
   else if (op === "×") {
 
     result = a * b;
 
   }
+
+
   else if (op === "÷") {
+
 
     if (b === 0) {
 
       current = "Error";
+
+      previous = "";
+
+      op = "";
 
       showQuestion();
 
@@ -529,6 +1103,7 @@ function calculate() {
       return;
 
     }
+
 
     result = a / b;
 
@@ -543,6 +1118,7 @@ function calculate() {
 
   waiting = true;
 
+
   showQuestion();
 
   updateDisplay();
@@ -550,7 +1126,10 @@ function calculate() {
 }
 
 
-/* AC */
+/* =================================
+   AC
+================================= */
+
 function clearAll() {
 
   current = "";
@@ -561,6 +1140,7 @@ function clearAll() {
 
   waiting = false;
 
+
   showQuestion();
 
   updateDisplay();
@@ -568,58 +1148,95 @@ function clearAll() {
 }
 
 
-/* 삭제 */
+/* =================================
+   삭제
+================================= */
+
 function deleteNumber() {
 
+
   if (current === "") {
+
     return;
+
   }
 
-  current = current.slice(0, -1);
+
+  current =
+  current.slice(0, -1);
+
 
   if (current === "") {
+
     showQuestion();
+
   }
+
 
   updateDisplay();
 
 }
 
 
-/* 퍼센트 */
+/* =================================
+   퍼센트
+================================= */
+
 function percent() {
 
+
   if (current === "") {
+
     return;
+
   }
 
-  current = String(Number(current) / 100);
+
+  current =
+  String(Number(current) / 100);
+
 
   updateDisplay();
 
 }
 
 
-/* +/- */
+/* =================================
+   +/- 
+================================= */
+
 function plusMinus() {
 
+
   if (current === "") {
+
     return;
+
   }
 
-  current = String(Number(current) * -1);
+
+  current =
+  String(Number(current) * -1);
+
 
   updateDisplay();
 
 }
 
 
-/* 버튼 실행 */
+/* =================================
+   버튼 실행
+================================= */
+
 function runAction(key) {
 
-  const action = key.dataset.action;
 
-  const value = key.dataset.value;
+  const action =
+  key.dataset.action;
+
+
+  const value =
+  key.dataset.value;
 
 
   if (action === "number") {
@@ -627,36 +1244,50 @@ function runAction(key) {
     number(Number(value));
 
   }
+
+
   else if (action === "op") {
 
     operation(value);
 
   }
+
+
   else if (action === "clear") {
 
     clearAll();
 
   }
+
+
   else if (action === "delete") {
 
     deleteNumber();
 
   }
+
+
   else if (action === "percent") {
 
     percent();
 
   }
+
+
   else if (action === "plusminus") {
 
     plusMinus();
 
   }
+
+
   else if (action === "decimal") {
 
     decimal();
 
   }
+
+
   else if (action === "calculate") {
 
     calculate();
@@ -666,138 +1297,223 @@ function runAction(key) {
 }
 
 
-/*
-짧게 누르기 = 계산기 작동
-길게 누르기 = 글자 선택/복사
-*/
+/* =================================
+   아이폰 터치
+================================= */
 
 let touchStartTime = 0;
+
 let suppressClick = false;
 
 
-buttons.addEventListener(
-  "touchstart",
-  function(e) {
-
-    const key = e.target.closest(".key");
-
-    if (!key) {
-      return;
-    }
-
-    touchStartTime = Date.now();
-
-  },
-  { passive: true }
-);
-
+/* 터치 시작 */
 
 buttons.addEventListener(
-  "touchend",
-  function(e) {
+"touchstart",
 
-    const key = e.target.closest(".key");
+function(e) {
 
-    if (!key) {
-      return;
-    }
+  const key =
+  e.target.closest(".key");
 
-    const duration = Date.now() - touchStartTime;
 
-    if (duration < 350) {
+  if (!key) {
 
-      e.preventDefault();
+    return;
 
-      key.classList.add("pressed");
+  }
 
-      setTimeout(function() {
+
+  touchStartTime =
+  Date.now();
+
+},
+
+{
+  passive: true
+});
+
+
+/* 터치 끝 */
+
+buttons.addEventListener(
+"touchend",
+
+function(e) {
+
+
+  const key =
+  e.target.closest(".key");
+
+
+  if (!key) {
+
+    return;
+
+  }
+
+
+  const duration =
+  Date.now() - touchStartTime;
+
+
+  /*
+    짧게 누르면 계산기 작동
+  */
+
+  if (duration < 350) {
+
+
+    e.preventDefault();
+
+
+    key.classList.add("pressed");
+
+
+    setTimeout(
+      function() {
+
         key.classList.remove("pressed");
-      }, 100);
 
-      runAction(key);
+      },
+      100
+    );
 
-      suppressClick = true;
-
-      setTimeout(function() {
-        suppressClick = false;
-      }, 700);
-
-    }
-    else {
-
-      suppressClick = true;
-
-      setTimeout(function() {
-        suppressClick = false;
-      }, 700);
-
-    }
-
-  },
-  { passive: false }
-);
-
-
-/* 마우스 클릭 */
-buttons.addEventListener(
-  "click",
-  function(e) {
-
-    const key = e.target.closest(".key");
-
-    if (!key) {
-      return;
-    }
-
-    if (suppressClick) {
-      return;
-    }
 
     runAction(key);
 
+
+    suppressClick = true;
+
+
+    setTimeout(
+      function() {
+
+        suppressClick = false;
+
+      },
+      700
+    );
+
   }
-);
 
 
-/* 사진 설정 */
+  /*
+    길게 누르면 선택 가능
+  */
+
+  else {
+
+    suppressClick = true;
+
+
+    setTimeout(
+      function() {
+
+        suppressClick = false;
+
+      },
+      700
+    );
+
+  }
+
+
+},
+{
+  passive: false
+});
+
+
+/* =================================
+   마우스 클릭
+================================= */
+
+buttons.addEventListener(
+"click",
+
+function(e) {
+
+
+  const key =
+  e.target.closest(".key");
+
+
+  if (!key) {
+
+    return;
+
+  }
+
+
+  if (suppressClick) {
+
+    return;
+
+  }
+
+
+  runAction(key);
+
+});
+
+
+/* =================================
+   사진 설정
+================================= */
+
 function openSettings() {
 
-  settings.style.display = "block";
+  settings.style.display =
+  "block";
 
 }
 
 
 function closeSettings() {
 
-  settings.style.display = "none";
+  settings.style.display =
+  "none";
 
 }
 
 
 settingsBtn.addEventListener(
-  "click",
-  function() {
+"click",
 
-    openSettings();
+function() {
 
-  }
-);
+  openSettings();
+
+});
 
 
 closeBtn.addEventListener(
-  "click",
-  function() {
+"click",
 
-    closeSettings();
+function() {
 
-  }
-);
+  closeSettings();
+
+});
 
 
-/* 저장된 사진 불러오기 */
-for (let i = 1; i <= 9; i++) {
+/* =================================
+   저장된 사진 불러오기
+================================= */
 
-  const saved = localStorage.getItem("photo" + i);
+for (
+  let i = 1;
+  i <= 9;
+  i++
+) {
+
+
+  const saved =
+  localStorage.getItem(
+    "photo" + i
+  );
+
 
   if (saved) {
 
@@ -808,59 +1524,90 @@ for (let i = 1; i <= 9; i++) {
 }
 
 
-/* 사진 저장 */
+/* =================================
+   사진 저장
+================================= */
+
 document
-.querySelectorAll("input[data-photo]")
-.forEach(function(input) {
+.querySelectorAll(
+  "input[data-photo]"
+)
+.forEach(
+function(input) {
+
 
   input.addEventListener(
-    "change",
-    function() {
+  "change",
 
-      const n = Number(input.dataset.photo);
-
-      const file = input.files[0];
-
-      if (!file) {
-        return;
-      }
-
-      const reader = new FileReader();
+  function() {
 
 
-      reader.onload = function(e) {
-
-        photos[n] = e.target.result;
-
-        try {
-
-          localStorage.setItem(
-            "photo" + n,
-            e.target.result
-          );
-
-        }
-        catch (error) {
-
-          alert("사진 용량이 너무 큽니다.");
-
-        }
-
-      };
+    const n =
+    Number(
+      input.dataset.photo
+    );
 
 
-      reader.readAsDataURL(file);
+    const file =
+    input.files[0];
+
+
+    if (!file) {
+
+      return;
 
     }
-  );
+
+
+    const reader =
+    new FileReader();
+
+
+    reader.onload =
+    function(e) {
+
+
+      photos[n] =
+      e.target.result;
+
+
+      try {
+
+        localStorage.setItem(
+          "photo" + n,
+          e.target.result
+        );
+
+      }
+
+      catch (error) {
+
+        alert(
+          "사진 용량이 너무 큽니다."
+        );
+
+      }
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+  });
 
 });
 
 
 /* 처음 화면 */
+
 updateDisplay();
+
+showQuestion();
+
 
 </script>
 
+
 </body>
+
 </html>
