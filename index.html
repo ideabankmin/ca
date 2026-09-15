@@ -1,1613 +1,803 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport"
-content="width=device-width,
-initial-scale=1.0,
-viewport-fit=cover">
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>사진 계산기</title>
-
+<title>Calculator</title>
 
 <style>
-
-/* 전체 */
 * {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
-
-html,
-body {
-
-  margin: 0;
-  padding: 0;
-
-  width: 100%;
-  height: 100%;
-
-  overflow: hidden;
-
-  background: white;
-
-  font-family: Arial, sans-serif;
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+                 "Helvetica Neue", Arial, sans-serif;
 }
-
 
 body {
-  position: relative;
+    color: white;
 }
 
-
-/* =================================
-   배경 물음표
-================================= */
-
-#backgroundQuestion {
-
-  position: fixed;
-
-  left: 50%;
-  top: 43%;
-
-  transform: translate(-50%, -50%);
-
-  font-size: 430px;
-
-  font-weight: bold;
-
-  line-height: 1;
-
-  color: black;
-
-  z-index: 1;
-
-  pointer-events: none;
-}
-
-
-/* =================================
-   사진
-================================= */
-
-#photo {
-
-  position: fixed;
-
-  left: 0;
-  top: 0;
-
-  width: 100vw;
-  height: 100vh;
-
-  object-fit: contain;
-
-  z-index: 1;
-
-  pointer-events: none;
-
-  display: none;
-}
-
-
-/* =================================
-   계산기 전체
-================================= */
-
+/* 계산기 전체 */
 .calculator {
-
-  position: fixed;
-
-  left: 50%;
-
-  bottom: 80px;
-
-  transform: translateX(-50%);
-
-  width: calc(100vw - 40px);
-
-  max-width: 430px;
-
-  z-index: 10;
+    width: 100%;
+    height: 100dvh;
+    background: #000;
+    position: relative;
+    overflow: hidden;
 }
 
-
-/* =================================
-   사진 설정 버튼
-================================= */
-
-.setting {
-
-  position: absolute;
-
-  left: 0;
-
-  bottom: calc(100% + 15px);
-
-  width: 130px;
-  height: 55px;
-
-  border: 1px solid #ddd;
-
-  border-radius: 30px;
-
-  background: rgba(255,255,255,0.75);
-
-  color: black;
-
-  font-size: 18px;
-
-  box-shadow:
-  0 3px 12px rgba(0,0,0,0.12);
-
-  z-index: 50;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  touch-action: manipulation;
+/* 위쪽 아이콘 */
+.top-button {
+    position: absolute;
+    top: 125px;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    background: #181818;
+    border: 1px solid #292929;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
 }
 
-
-/* =================================
-   숫자 표시창
-================================= */
-
-#display {
-
-  width: 100%;
-
-  min-height: 70px;
-
-  margin-bottom: 10px;
-
-  padding: 8px 18px;
-
-  border: 1px solid #ddd;
-
-  border-radius: 18px;
-
-  background: rgba(255,255,255,0.75);
-
-  color: black;
-
-  font-size: 42px;
-
-  line-height: 52px;
-
-  text-align: right;
-
-  overflow: hidden;
-
-  white-space: nowrap;
-
-  /*
-    표시된 숫자는 길게 눌러
-    복사할 수 있음
-  */
-  -webkit-user-select: text;
-  user-select: text;
-
-  -webkit-touch-callout: default;
+.history-button {
+    left: 34px;
 }
 
+.settings-button {
+    right: 34px;
+}
 
-/* =================================
-   버튼 배열
-================================= */
+/* 시계 */
+.clock {
+    width: 38px;
+    height: 38px;
+    border: 3px solid white;
+    border-radius: 50%;
+    position: relative;
+}
 
+.clock:before {
+    content: "";
+    position: absolute;
+    width: 3px;
+    height: 13px;
+    background: white;
+    left: 16px;
+    top: 6px;
+    border-radius: 3px;
+}
+
+.clock:after {
+    content: "";
+    position: absolute;
+    width: 11px;
+    height: 3px;
+    background: white;
+    left: 7px;
+    top: 19px;
+    border-radius: 3px;
+}
+
+/* 계산기 아이콘 */
+.calc-icon {
+    width: 34px;
+    height: 42px;
+    border: 4px solid white;
+    border-radius: 6px;
+    position: relative;
+}
+
+.calc-icon:before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 5px;
+    width: 15px;
+    height: 5px;
+    background: white;
+    border-radius: 2px;
+}
+
+.calc-icon:after {
+    content: "•••\A•••\A•••";
+    white-space: pre;
+    position: absolute;
+    left: 7px;
+    top: 13px;
+    font-size: 10px;
+    line-height: 7px;
+}
+
+/* 화면 */
+.display {
+    position: absolute;
+    right: 38px;
+    top: 540px;
+    width: calc(100% - 76px);
+    height: 130px;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+
+    font-size: 88px;
+    font-weight: 300;
+    letter-spacing: -3px;
+
+    overflow: hidden;
+}
+
+/* 버튼 영역 */
 .buttons {
+    position: absolute;
+    left: 34px;
+    right: 34px;
+    bottom: 32px;
 
-  width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
 
-  display: grid;
-
-  grid-template-columns:
-  repeat(4, 1fr);
-
-  grid-template-rows:
-  repeat(5, 1fr);
-
-  gap: 10px;
+    gap: 18px;
 }
 
+/* 버튼 */
+.btn {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: none;
+    border-radius: 50%;
 
-/* =================================
-   버튼
-================================= */
+    color: white;
+    background: #303030;
 
-.key {
+    font-size: 43px;
+    font-weight: 300;
 
-  width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  aspect-ratio: 1 / 1;
-
-  border: 1px solid #ddd;
-
-  border-radius: 50%;
-
-  background:
-  rgba(255,255,255,0.65);
-
-  color: black;
-
-  font-size: 40px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  box-shadow:
-  0 3px 12px rgba(0,0,0,0.10);
-
-  position: relative;
-
-  z-index: 20;
-
-  cursor: pointer;
-
-  touch-action: manipulation;
-
-  -webkit-user-select: none;
-  user-select: none;
+    user-select: none;
+    touch-action: manipulation;
 }
 
-
-.key.operator {
-
-  font-size: 42px;
+.btn:active {
+    filter: brightness(1.45);
 }
 
-
-/* 눌렀을 때 */
-
-.key:active,
-.key.pressed {
-
-  transform: scale(0.92);
-
-  background:
-  rgba(220,220,220,0.8);
+.gray {
+    background: #636363;
 }
 
-
-/* =================================
-   설정창
-================================= */
-
-#settings {
-
-  position: fixed;
-
-  left: 50%;
-  top: 50%;
-
-  transform:
-  translate(-50%, -50%);
-
-  width: 90vw;
-
-  max-width: 400px;
-
-  max-height: 80vh;
-
-  overflow-y: auto;
-
-  padding: 25px;
-
-  background: white;
-
-  border-radius: 25px;
-
-  box-shadow:
-  0 10px 40px rgba(0,0,0,0.25);
-
-  z-index: 100;
-
-  display: none;
+.orange {
+    background: #ff9f0a;
 }
 
-
-#settings h2 {
-
-  margin-top: 0;
-
-  text-align: center;
+/* 0 버튼 */
+.zero {
+    grid-column: 2;
 }
 
-
-.photoSetting {
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  gap: 8px;
-
-  margin: 14px 0;
-
-  font-size: 17px;
+/* 설정 창 */
+.modal-background {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
 }
 
-
-.photoSetting input {
-
-  width: 190px;
+.modal {
+    width: calc(100% - 50px);
+    max-width: 430px;
+    background: #202020;
+    border-radius: 22px;
+    padding: 24px;
+    color: white;
 }
 
-
-.close {
-
-  width: 100%;
-
-  height: 50px;
-
-  margin-top: 15px;
-
-  border: none;
-
-  border-radius: 25px;
-
-  background: #eee;
-
-  font-size: 18px;
-
-  cursor: pointer;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
+.modal h2 {
+    margin: 0 0 20px;
+    font-size: 24px;
 }
 
+.modal input {
+    width: 100%;
+    height: 52px;
+    border: none;
+    border-radius: 12px;
+    background: #353535;
+    color: white;
+    font-size: 20px;
+    padding: 0 15px;
+    outline: none;
+    margin-bottom: 12px;
+}
 
-/* =================================
-   작은 화면
-================================= */
+.modal button {
+    width: 100%;
+    height: 50px;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    margin-top: 8px;
+    color: white;
+    background: #ff9f0a;
+}
 
+.modal .cancel {
+    background: #444;
+}
+
+/* 비밀 미디어 */
+.secret-screen {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+
+    background: black;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 200;
+}
+
+.secret-screen img,
+.secret-screen video {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    background: black;
+}
+
+.close-secret {
+    position: absolute;
+    right: 20px;
+    top: 55px;
+
+    width: 48px;
+    height: 48px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(80,80,80,0.7);
+    color: white;
+
+    font-size: 28px;
+    z-index: 210;
+}
+
+/* 작은 화면 */
 @media (max-height: 750px) {
 
-  .calculator {
+    .top-button {
+        top: 75px;
+        width: 70px;
+        height: 70px;
+    }
 
-    bottom: 60px;
+    .history-button {
+        left: 25px;
+    }
 
-  }
+    .settings-button {
+        right: 25px;
+    }
 
+    .display {
+        top: 330px;
+        font-size: 75px;
+    }
 
-  .buttons {
+    .buttons {
+        left: 25px;
+        right: 25px;
+        bottom: 20px;
+        gap: 10px;
+    }
 
-    gap: 7px;
-
-  }
-
-
-  .key {
-
-    font-size: 34px;
-
-  }
-
-
-  .key.operator {
-
-    font-size: 36px;
-
-  }
-
-
-  #display {
-
-    min-height: 60px;
-
-    font-size: 36px;
-
-  }
-
+    .btn {
+        font-size: 34px;
+    }
 }
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- 배경 ? -->
-
-<div id="backgroundQuestion">?</div>
-
-
-<!-- 사진 -->
-
-<img
-id="photo"
-alt="사진"
->
-
-
-<!-- =================================
-     계산기
-================================= -->
-
 <div class="calculator">
 
-
-  <!-- 사진 설정 -->
-
-  <div
-  class="setting"
-  id="settingsBtn">
-
-    사진 설정
-
-  </div>
-
-
-  <!-- 숫자 표시 -->
-
-  <div id="display">
-
-    0
-
-  </div>
-
-
-  <!-- 버튼 -->
-
-  <div
-  class="buttons"
-  id="buttons">
-
-
-    <!-- 첫째 줄 -->
-
-    <div
-    class="key"
-    data-action="clear">
-
-      AC
-
+    <!-- 왼쪽 위 -->
+    <div class="top-button history-button">
+        <div class="clock"></div>
     </div>
 
-
-    <div
-    class="key"
-    data-action="delete">
-
-      ⌫
-
+    <!-- 오른쪽 위 -->
+    <div class="top-button settings-button" onclick="openSettings()">
+        <div class="calc-icon"></div>
     </div>
 
+    <!-- 숫자 표시 -->
+    <div class="display" id="display"></div>
 
-    <div
-    class="key"
-    data-action="percent">
+    <!-- 버튼 -->
+    <div class="buttons">
 
-      %
+        <button class="btn gray" onclick="backspace()">⌫</button>
+        <button class="btn gray" onclick="clearDisplay()">C</button>
+        <button class="btn gray" onclick="percent()">%</button>
+        <button class="btn orange" onclick="operator('/')">÷</button>
 
-    </div>
+        <button class="btn" onclick="number('7')">7</button>
+        <button class="btn" onclick="number('8')">8</button>
+        <button class="btn" onclick="number('9')">9</button>
+        <button class="btn orange" onclick="operator('*')">×</button>
 
+        <button class="btn" onclick="number('4')">4</button>
+        <button class="btn" onclick="number('5')">5</button>
+        <button class="btn" onclick="number('6')">6</button>
+        <button class="btn orange" onclick="operator('-')">−</button>
 
-    <div
-    class="key operator"
-    data-action="op"
-    data-value="÷">
+        <button class="btn" onclick="number('1')">1</button>
+        <button class="btn" onclick="number('2')">2</button>
+        <button class="btn" onclick="number('3')">3</button>
+        <button class="btn orange" onclick="operator('+')">+</button>
 
-      ÷
-
-    </div>
-
-
-    <!-- 둘째 줄 -->
-
-    <div
-    class="key"
-    data-action="number"
-    data-value="7">
-
-      7
-
-    </div>
-
-
-    <div
-    class="key"
-    data-action="number"
-    data-value="8">
-
-      8
+        <button class="btn" onclick="plusMinus()">+/−</button>
+        <button class="btn zero" onclick="number('0')">0</button>
+        <button class="btn" onclick="decimal()">.</button>
+        <button class="btn orange" onclick="equals()">=</button>
 
     </div>
+</div>
 
 
-    <div
-    class="key"
-    data-action="number"
-    data-value="9">
+<!-- 설정창 -->
+<div class="modal-background" id="settingsModal">
 
-      9
+    <div class="modal">
 
-    </div>
+        <h2>비밀 계산기 설정</h2>
 
+        <input
+            id="passwordInput"
+            type="password"
+            inputmode="numeric"
+            placeholder="비밀번호 숫자"
+        >
 
-    <div
-    class="key operator"
-    data-action="op"
-    data-value="×">
+        <button onclick="savePassword()">
+            암호 설정
+        </button>
 
-      ×
+        <input
+            id="mediaInput"
+            type="file"
+            accept="image/*,video/*"
+        >
 
-    </div>
+        <button onclick="saveMedia()">
+            사진 / 동영상 저장
+        </button>
 
-
-    <!-- 셋째 줄 -->
-
-    <div
-    class="key"
-    data-action="number"
-    data-value="4">
-
-      4
-
-    </div>
-
-
-    <div
-    class="key"
-    data-action="number"
-    data-value="5">
-
-      5
+        <button class="cancel" onclick="closeSettings()">
+            닫기
+        </button>
 
     </div>
-
-
-    <div
-    class="key"
-    data-action="number"
-    data-value="6">
-
-      6
-
-    </div>
-
-
-    <div
-    class="key operator"
-    data-action="op"
-    data-value="-">
-
-      −
-
-    </div>
-
-
-    <!-- 넷째 줄 -->
-
-    <div
-    class="key"
-    data-action="number"
-    data-value="1">
-
-      1
-
-    </div>
-
-
-    <div
-    class="key"
-    data-action="number"
-    data-value="2">
-
-      2
-
-    </div>
-
-
-    <div
-    class="key"
-    data-action="number"
-    data-value="3">
-
-      3
-
-    </div>
-
-
-    <div
-    class="key operator"
-    data-action="op"
-    data-value="+">
-
-      +
-
-    </div>
-
-
-    <!-- 다섯째 줄 -->
-
-    <div
-    class="key"
-    data-action="plusminus">
-
-      ±
-
-    </div>
-
-
-    <div
-    class="key"
-    data-action="number"
-    data-value="0">
-
-      0
-
-    </div>
-
-
-    <div
-    class="key"
-    data-action="decimal">
-
-      .
-
-    </div>
-
-
-    <div
-    class="key operator"
-    data-action="calculate">
-
-      =
-
-    </div>
-
-
-  </div>
 
 </div>
 
 
-<!-- =================================
-     사진 설정창
-================================= -->
+<!-- 비밀 사진 / 동영상 화면 -->
+<div class="secret-screen" id="secretScreen">
 
-<div id="settings">
+    <button class="close-secret" onclick="closeSecret()">×</button>
 
+    <img id="secretImage" style="display:none;">
 
-  <h2>
-    사진 설정
-  </h2>
-
-
-  <div class="photoSetting">
-
-    <span>1번</span>
-
-    <input
-    type="file"
-    accept="image/*"
-    data-photo="1">
-
-  </div>
-
-
-  <div class="photoSetting">
-
-    <span>2번</span>
-
-    <input
-    type="file"
-    accept="image/*"
-    data-photo="2">
-
-  </div>
-
-
-  <div class="photoSetting">
-
-    <span>3번</span>
-
-    <input
-    type="file"
-    accept="image/*"
-    data-photo="3">
-
-  </div>
-
-
-  <div class="photoSetting">
-
-    <span>4번</span>
-
-    <input
-    type="file"
-    accept="image/*"
-    data-photo="4">
-
-  </div>
-
-
-  <div class="photoSetting">
-
-    <span>5번</span>
-
-    <input
-    type="file"
-    accept="image/*"
-    data-photo="5">
-
-  </div>
-
-
-  <div class="photoSetting">
-
-    <span>6번</span>
-
-    <input
-    type="file"
-    accept="image/*"
-    data-photo="6">
-
-  </div>
-
-
-  <div class="photoSetting">
-
-    <span>7번</span>
-
-    <input
-    type="file"
-    accept="image/*"
-    data-photo="7">
-
-  </div>
-
-
-  <div class="photoSetting">
-
-    <span>8번</span>
-
-    <input
-    type="file"
-    accept="image/*"
-    data-photo="8">
-
-  </div>
-
-
-  <div class="photoSetting">
-
-    <span>9번</span>
-
-    <input
-    type="file"
-    accept="image/*"
-    data-photo="9">
-
-  </div>
-
-
-  <div
-  class="close"
-  id="closeBtn">
-
-    닫기
-
-  </div>
-
+    <video
+        id="secretVideo"
+        style="display:none;"
+        controls
+        playsinline
+    ></video>
 
 </div>
 
 
 <script>
 
-
-/* =================================
-   계산기 변수
-================================= */
-
 let current = "";
-
-let previous = "";
-
+let first = "";
 let op = "";
-
-let waiting = false;
-
-let photos = {};
+let resetNext = false;
 
 
-/* 요소 */
-
-const buttons =
-document.getElementById("buttons");
-
-const settings =
-document.getElementById("settings");
-
-const settingsBtn =
-document.getElementById("settingsBtn");
-
-const closeBtn =
-document.getElementById("closeBtn");
-
-const question =
-document.getElementById("backgroundQuestion");
-
-const photo =
-document.getElementById("photo");
-
-const display =
-document.getElementById("display");
-
-
-/* =================================
-   숫자 표시
-================================= */
+/* =========================
+   계산기
+========================= */
 
 function updateDisplay() {
 
-  if (current === "") {
+    let text = current;
 
-    display.textContent = "0";
+    if (text === "") {
+        text = "";
+    }
 
-  }
-  else {
-
-    display.textContent = current;
-
-  }
-
+    document.getElementById("display").innerText = text;
 }
 
-
-/* =================================
-   사진 표시
-================================= */
-
-function showPhoto(n) {
-
-  if (photos[n]) {
-
-    question.style.display = "none";
-
-    photo.src = photos[n];
-
-    photo.style.display = "block";
-
-  }
-  else {
-
-    showQuestion();
-
-  }
-
-}
-
-
-/* =================================
-   물음표 표시
-================================= */
-
-function showQuestion() {
-
-  question.style.display = "block";
-
-  photo.style.display = "none";
-
-}
-
-
-/* =================================
-   숫자
-================================= */
 
 function number(n) {
 
-
-  /* 연산자 다음 숫자 */
-
-  if (waiting) {
-
-    current = "";
-
-    waiting = false;
-
-  }
-
-
-  /* 0 */
-
-  if (n === 0) {
-
-    if (
-      current === "" ||
-      current === "0"
-    ) {
-
-      current = "0";
-
+    if (resetNext) {
+        current = "";
+        resetNext = false;
     }
-    else {
-
-      current += "0";
-
-    }
-
-    showQuestion();
-
-  }
-
-
-  /* 1~9 */
-
-  else {
 
     if (current === "0") {
-
-      current = "";
-
+        current = n;
+    } else {
+        current += n;
     }
 
-    current += String(n);
-
-    showPhoto(n);
-
-  }
-
-
-  updateDisplay();
-
+    updateDisplay();
 }
 
-
-/* =================================
-   소수점
-================================= */
 
 function decimal() {
 
-
-  if (waiting) {
-
-    current = "0.";
-
-    waiting = false;
-
-  }
-
-  else {
-
-    if (current === "") {
-
-      current = "0.";
-
+    if (resetNext) {
+        current = "";
+        resetNext = false;
     }
 
-    else if (!current.includes(".")) {
+    if (!current.includes(".")) {
 
-      current += ".";
-
+        if (current === "") {
+            current = "0.";
+        } else {
+            current += ".";
+        }
     }
 
-  }
-
-
-  updateDisplay();
-
+    updateDisplay();
 }
 
 
-/* =================================
-   연산
-================================= */
+function clearDisplay() {
 
-function operation(x) {
+    current = "";
+    first = "";
+    op = "";
+    resetNext = false;
 
-
-  if (current === "") {
-
-    current = "0";
-
-  }
-
-
-  previous = current;
-
-  op = x;
-
-  waiting = true;
-
-
-  updateDisplay();
-
+    updateDisplay();
 }
 
 
-/* =================================
-   계산
-================================= */
+function backspace() {
 
-function calculate() {
+    current = current.slice(0, -1);
 
-
-  if (
-    previous === "" ||
-    current === "" ||
-    op === ""
-  ) {
-
-    return;
-
-  }
-
-
-  const a = Number(previous);
-
-  const b = Number(current);
-
-  let result = 0;
-
-
-  if (op === "+") {
-
-    result = a + b;
-
-  }
-
-
-  else if (op === "-") {
-
-    result = a - b;
-
-  }
-
-
-  else if (op === "×") {
-
-    result = a * b;
-
-  }
-
-
-  else if (op === "÷") {
-
-
-    if (b === 0) {
-
-      current = "Error";
-
-      previous = "";
-
-      op = "";
-
-      showQuestion();
-
-      updateDisplay();
-
-      return;
-
-    }
-
-
-    result = a / b;
-
-  }
-
-
-  current = String(result);
-
-  previous = "";
-
-  op = "";
-
-  waiting = true;
-
-
-  showQuestion();
-
-  updateDisplay();
-
+    updateDisplay();
 }
 
-
-/* =================================
-   AC
-================================= */
-
-function clearAll() {
-
-  current = "";
-
-  previous = "";
-
-  op = "";
-
-  waiting = false;
-
-
-  showQuestion();
-
-  updateDisplay();
-
-}
-
-
-/* =================================
-   삭제
-================================= */
-
-function deleteNumber() {
-
-
-  if (current === "") {
-
-    return;
-
-  }
-
-
-  current =
-  current.slice(0, -1);
-
-
-  if (current === "") {
-
-    showQuestion();
-
-  }
-
-
-  updateDisplay();
-
-}
-
-
-/* =================================
-   퍼센트
-================================= */
-
-function percent() {
-
-
-  if (current === "") {
-
-    return;
-
-  }
-
-
-  current =
-  String(Number(current) / 100);
-
-
-  updateDisplay();
-
-}
-
-
-/* =================================
-   +/- 
-================================= */
 
 function plusMinus() {
 
+    if (current === "") return;
 
-  if (current === "") {
+    if (current.startsWith("-")) {
+        current = current.substring(1);
+    } else {
+        current = "-" + current;
+    }
 
-    return;
-
-  }
-
-
-  current =
-  String(Number(current) * -1);
-
-
-  updateDisplay();
-
+    updateDisplay();
 }
 
 
-/* =================================
-   버튼 실행
-================================= */
+function percent() {
 
-function runAction(key) {
+    if (current === "") return;
 
+    current = String(Number(current) / 100);
 
-  const action =
-  key.dataset.action;
-
-
-  const value =
-  key.dataset.value;
-
-
-  if (action === "number") {
-
-    number(Number(value));
-
-  }
-
-
-  else if (action === "op") {
-
-    operation(value);
-
-  }
-
-
-  else if (action === "clear") {
-
-    clearAll();
-
-  }
-
-
-  else if (action === "delete") {
-
-    deleteNumber();
-
-  }
-
-
-  else if (action === "percent") {
-
-    percent();
-
-  }
-
-
-  else if (action === "plusminus") {
-
-    plusMinus();
-
-  }
-
-
-  else if (action === "decimal") {
-
-    decimal();
-
-  }
-
-
-  else if (action === "calculate") {
-
-    calculate();
-
-  }
-
+    updateDisplay();
 }
 
 
-/* =================================
-   아이폰 터치
-================================= */
+function operator(o) {
 
-let touchStartTime = 0;
+    if (current === "") return;
 
-let suppressClick = false;
+    first = current;
+    op = o;
+    resetNext = true;
+}
 
 
-/* 터치 시작 */
+function equals() {
 
-buttons.addEventListener(
-"touchstart",
+    /*
+       비밀번호 확인
+    */
 
-function(e) {
+    let savedPassword = localStorage.getItem("calculatorPassword");
 
-  const key =
-  e.target.closest(".key");
+    if (
+        savedPassword &&
+        current === savedPassword &&
+        first === "" &&
+        op === ""
+    ) {
 
+        openSecret();
 
-  if (!key) {
+        return;
+    }
 
-    return;
 
-  }
+    /*
+       일반 계산
+    */
 
+    if (first === "" || op === "" || current === "") {
+        return;
+    }
 
-  touchStartTime =
-  Date.now();
+    let a = Number(first);
+    let b = Number(current);
+    let result = 0;
 
-},
+    if (op === "+") {
+        result = a + b;
+    }
 
-{
-  passive: true
-});
+    if (op === "-") {
+        result = a - b;
+    }
 
+    if (op === "*") {
+        result = a * b;
+    }
 
-/* 터치 끝 */
+    if (op === "/") {
 
-buttons.addEventListener(
-"touchend",
+        if (b === 0) {
+            current = "오류";
+            first = "";
+            op = "";
+            updateDisplay();
+            return;
+        }
 
-function(e) {
+        result = a / b;
+    }
 
+    current = String(result);
 
-  const key =
-  e.target.closest(".key");
+    first = "";
+    op = "";
+    resetNext = true;
 
+    updateDisplay();
+}
 
-  if (!key) {
 
-    return;
-
-  }
-
-
-  const duration =
-  Date.now() - touchStartTime;
-
-
-  /*
-    짧게 누르면 계산기 작동
-  */
-
-  if (duration < 350) {
-
-
-    e.preventDefault();
-
-
-    key.classList.add("pressed");
-
-
-    setTimeout(
-      function() {
-
-        key.classList.remove("pressed");
-
-      },
-      100
-    );
-
-
-    runAction(key);
-
-
-    suppressClick = true;
-
-
-    setTimeout(
-      function() {
-
-        suppressClick = false;
-
-      },
-      700
-    );
-
-  }
-
-
-  /*
-    길게 누르면 선택 가능
-  */
-
-  else {
-
-    suppressClick = true;
-
-
-    setTimeout(
-      function() {
-
-        suppressClick = false;
-
-      },
-      700
-    );
-
-  }
-
-
-},
-{
-  passive: false
-});
-
-
-/* =================================
-   마우스 클릭
-================================= */
-
-buttons.addEventListener(
-"click",
-
-function(e) {
-
-
-  const key =
-  e.target.closest(".key");
-
-
-  if (!key) {
-
-    return;
-
-  }
-
-
-  if (suppressClick) {
-
-    return;
-
-  }
-
-
-  runAction(key);
-
-});
-
-
-/* =================================
-   사진 설정
-================================= */
+/* =========================
+   설정
+========================= */
 
 function openSettings() {
 
-  settings.style.display =
-  "block";
+    document.getElementById("settingsModal").style.display = "flex";
 
+    let password = localStorage.getItem("calculatorPassword");
+
+    if (password) {
+        document.getElementById("passwordInput").value = password;
+    }
 }
 
 
 function closeSettings() {
 
-  settings.style.display =
-  "none";
-
+    document.getElementById("settingsModal").style.display = "none";
 }
 
 
-settingsBtn.addEventListener(
-"click",
+function savePassword() {
 
-function() {
+    let password =
+        document.getElementById("passwordInput").value.trim();
 
-  openSettings();
+    if (password === "") {
+        alert("암호를 입력해주세요.");
+        return;
+    }
 
-});
+    if (!/^[0-9]+$/.test(password)) {
+        alert("숫자만 입력해주세요.");
+        return;
+    }
 
-
-closeBtn.addEventListener(
-"click",
-
-function() {
-
-  closeSettings();
-
-});
-
-
-/* =================================
-   저장된 사진 불러오기
-================================= */
-
-for (
-  let i = 1;
-  i <= 9;
-  i++
-) {
-
-
-  const saved =
-  localStorage.getItem(
-    "photo" + i
-  );
-
-
-  if (saved) {
-
-    photos[i] = saved;
-
-  }
-
-}
-
-
-/* =================================
-   사진 저장
-================================= */
-
-document
-.querySelectorAll(
-  "input[data-photo]"
-)
-.forEach(
-function(input) {
-
-
-  input.addEventListener(
-  "change",
-
-  function() {
-
-
-    const n =
-    Number(
-      input.dataset.photo
+    localStorage.setItem(
+        "calculatorPassword",
+        password
     );
 
+    alert("암호가 설정되었습니다.");
 
-    const file =
-    input.files[0];
+    document.getElementById("passwordInput").value = "";
 
+    closeSettings();
+}
+
+
+/* =========================
+   사진 / 동영상 저장
+========================= */
+
+function saveMedia() {
+
+    let file =
+        document.getElementById("mediaInput").files[0];
 
     if (!file) {
+        alert("사진 또는 동영상을 선택해주세요.");
+        return;
+    }
 
-      return;
+    let reader = new FileReader();
 
+    reader.onload = function(e) {
+
+        try {
+
+            localStorage.setItem(
+                "secretMedia",
+                e.target.result
+            );
+
+            localStorage.setItem(
+                "secretMediaType",
+                file.type
+            );
+
+            alert("사진/동영상이 저장되었습니다.");
+
+        } catch (error) {
+
+            alert(
+                "파일이 너무 큽니다.\n" +
+                "특히 동영상은 브라우저 저장공간 제한 때문에 저장되지 않을 수 있습니다."
+            );
+        }
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+/* =========================
+   비밀 화면
+========================= */
+
+function openSecret() {
+
+    let media =
+        localStorage.getItem("secretMedia");
+
+    let type =
+        localStorage.getItem("secretMediaType");
+
+    if (!media) {
+
+        alert(
+            "저장된 사진이나 동영상이 없습니다.\n" +
+            "오른쪽 위 계산기 버튼에서 먼저 저장해주세요."
+        );
+
+        clearDisplay();
+
+        return;
+    }
+
+    let screen =
+        document.getElementById("secretScreen");
+
+    let image =
+        document.getElementById("secretImage");
+
+    let video =
+        document.getElementById("secretVideo");
+
+
+    image.style.display = "none";
+    video.style.display = "none";
+
+
+    if (type && type.startsWith("video")) {
+
+        video.src = media;
+        video.style.display = "block";
+
+        screen.style.display = "flex";
+
+        video.play().catch(() => {});
+
+    } else {
+
+        image.src = media;
+        image.style.display = "block";
+
+        screen.style.display = "flex";
     }
 
 
-    const reader =
-    new FileReader();
+    /*
+       가능한 경우 브라우저 전체 화면
+    */
+
+    if (screen.requestFullscreen) {
+
+        screen.requestFullscreen().catch(() => {});
+
+    }
+
+    clearDisplay();
+}
 
 
-    reader.onload =
-    function(e) {
+function closeSecret() {
 
+    let screen =
+        document.getElementById("secretScreen");
 
-      photos[n] =
-      e.target.result;
+    let video =
+        document.getElementById("secretVideo");
 
+    video.pause();
 
-      try {
+    screen.style.display = "none";
 
-        localStorage.setItem(
-          "photo" + n,
-          e.target.result
-        );
+    if (document.fullscreenElement) {
 
-      }
+        document.exitFullscreen().catch(() => {});
 
-      catch (error) {
-
-        alert(
-          "사진 용량이 너무 큽니다."
-        );
-
-      }
-
-    };
-
-
-    reader.readAsDataURL(file);
-
-  });
-
-});
+    }
+}
 
 
 /* 처음 화면 */
-
 updateDisplay();
-
-showQuestion();
-
 
 </script>
 
-
 </body>
-
 </html>
